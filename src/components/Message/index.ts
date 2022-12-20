@@ -98,15 +98,3 @@ export default {
         app.config.globalProperties.$message = message
     },
 }
-
-
-const key: string = 'name';
-type Person = {
-    name: string;
-    age: number;
-}
-const person: Person = {
-    name: 'Martin',
-    age: 20,
-};
-console.log(person[key as keyof Person]);
