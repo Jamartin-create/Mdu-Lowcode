@@ -1,5 +1,8 @@
-import express from 'express'
-const app = express()
-const port = 5000
-app.get('/', (_, res) => { res.status(200).send('aadddd') })
-app.listen(port, () => console.log(`Running on port ${port}`))  
+import Server from "./plugin/server";
+
+const server = new Server();
+
+server.app.listen(8888, () => {
+    console.log('Express Server lisenting on port 8888')
+})
+
