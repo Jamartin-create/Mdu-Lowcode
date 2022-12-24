@@ -1,11 +1,8 @@
 import { Router } from "express";
-import user from './user';
+import test from './test';
 
 const routes = Router();
 
-routes.use('/api/user', user);
-routes.get('/', (req, res) => {
-    res.send('ok')
-})
+routes.use('/api/test', test);
 
 export default routes;
