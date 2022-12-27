@@ -16,6 +16,11 @@ export default [
         component: () => import('../pages/Login/index.vue'),
         meta: {}
     }, {
+        path: '/register',
+        name: 'register',
+        component: () => import('../pages/Login/register.vue'),
+        meta: {}
+    }, {
         path: '/dataSource',
         name: 'dataSource',
         component: () => import('../pages/DataSource/index.vue'),
