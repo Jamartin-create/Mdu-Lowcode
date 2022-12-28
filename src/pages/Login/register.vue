@@ -42,7 +42,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { rule } from "./login";
+const router = useRouter();
 const password = ref<string>("");
 const rePassword = ref<string>("");
 const username = ref<string>("");
@@ -56,6 +58,7 @@ async function validate() {
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
+    router.push({ name: "login" });
   }, 3000);
 }
 </script>

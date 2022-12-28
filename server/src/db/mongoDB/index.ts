@@ -16,7 +16,7 @@ export function connect(): void {
  * @param schema 集合格式
  * @returns Model
  */
-export function model(collectionName: string, schema: Schema) {
+export function useModel(collectionName: string, schema: Schema) {
     return mongoose.model(collectionName, schema);
 }
 

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { TestSchema } from '../db/mongoDB/schema/business'
-import { model } from '../db/mongoDB'
+import { useModel } from '../db/mongoDB'
 import { Document } from 'mongoose';
 
-const TestModel = model('test', TestSchema);
+const TestModel = useModel('test', TestSchema);
 
 export default class TestService {
     static testGet = async (req: Request, res: Response) => {

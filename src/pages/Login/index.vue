@@ -13,13 +13,13 @@
         <v-form ref="loginForm" v-model="valid">
           <v-text-field
             v-model="username"
-            :rules="userNameRule"
+            :rules="rule.username"
             label="username"
             required
           ></v-text-field>
           <v-text-field
             v-model="password"
-            :rules="passwordRule"
+            :rules="rule.password"
             type="password"
             label="password"
             required
@@ -37,13 +37,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { rule } from "./login";
 const router = useRouter();
 const loading = ref<boolean>(false);
 const valid = ref<boolean>(false);
 const username = ref<string>("");
 const password = ref<string>("");
-const userNameRule = [(v: string) => !!v || "请输入用户名"];
-const passwordRule = [(v: string) => !!v || "请输入密码"];
 
 const loginForm = ref<any>();
 async function validate() {

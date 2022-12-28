@@ -1,7 +1,18 @@
 import { Schema } from "mongoose";
+import { User, BusinessBaseEntity, Test } from './schemaType';
 
-export const TestSchema = new Schema({
-    name: String,
-    age: Number,
-    gender: String,
+/**
+ * 测试Schema
+ */
+export const TestSchema = new Schema<Test>()
+
+/**
+ * 用户Schema
+ */
+export const UserSchema = new Schema({
+    userName: String,
+    userAge: Number,
+    userGender: String,
+    userPwd: String,
+    userEmail: String
 })
