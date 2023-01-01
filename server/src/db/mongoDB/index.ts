@@ -4,6 +4,7 @@ import mongoose, { Schema } from "mongoose";
  * @description 连接MongoDB服务
  */
 export function connect(): void {
+    console.log(MG_URL)
     mongoose.connect(MG_URL, err => {
         if (err) console.log(err);
         else console.log('MongoDB连接成功')
