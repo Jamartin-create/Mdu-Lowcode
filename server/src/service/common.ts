@@ -1,4 +1,3 @@
-
 export type BaseRes = {
     msg: string;
     code: number;

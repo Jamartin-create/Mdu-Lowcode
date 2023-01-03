@@ -3,6 +3,8 @@ import express from 'express'
 import cors from 'cors'
 import { json, urlencoded } from 'body-parser'
 import routes from '../routes/index'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default class Server {
     public app: express.Application;
@@ -19,5 +21,13 @@ export default class Server {
         this.app.use(urlencoded({ extended: false }))
         this.app.use(morgan('dev'))
         this.app.use(routes)
+    }
+    /**
+     * @description 启动服务
+     */
+    public startServer() {
+        this.app.listen(process.env.SERVER_PORT, () => {
+            console.log(`Express Server lisenting on port ${process.env.SERVER_PORT}`)
+        })
     }
 }
