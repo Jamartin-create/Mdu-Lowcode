@@ -7,6 +7,23 @@
           @click.stop="drawer = !drawer"
         ></v-app-bar-nav-icon>
       </template>
+      <v-btn variant="text" icon="mdi-account" id="menu-activator"> </v-btn>
+      <v-menu location="start" activator="#menu-activator">
+        <v-list>
+          <v-list-item value="logout" @click="router.push({ name: 'login' })">
+            <v-list-item-title>
+              <v-icon icon="mdi-logout"></v-icon>
+              登出
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item value="github" @click="openGithub">
+            <v-list-item-title>
+              <v-icon icon="mdi-github"></v-icon>
+              github
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-navigation-drawer permanent v-model="drawer" width="180">
       <v-list density="compact" nav>
@@ -47,6 +64,9 @@ const drawer = ref<boolean>(true);
 //菜单功能区选择
 function toSubPage(pageName: string) {
   router.push({ name: pageName });
+}
+function openGithub() {
+  window.open("https://github.com/jamartin-create");
 }
 </script>
 

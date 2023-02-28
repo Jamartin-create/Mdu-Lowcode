@@ -51,6 +51,7 @@ async function validate() {
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
+    router.push({ name: "home" });
   }, 3000);
 }
 </script>
