@@ -1,9 +1,31 @@
 export default [
     {
         path: '/',
+        redirect: '/home',
+    },
+    {
+        path: '/home',
         name: 'home',
         component: () => import('../pages/Home/index.vue'),
         meta: {},
+        children: [
+            {
+                path: 'api',
+                name: 'api',
+                component: () => import('../pages/Home/ManaAPI.vue')
+            },
+            {
+                path: 'user',
+                name: 'user',
+                component: () => import('../pages/Home/ManaUser.vue')
+            },
+            {
+                path: 'sequare',
+                name: 'sequare',
+                component: () => import('../pages/Home/ManaSequare.vue')
+            },
+        ],
+        redirect: '/home/user'
     },
     {
         path: '/editor',
@@ -25,5 +47,5 @@ export default [
         name: 'dataSource',
         component: () => import('../pages/DataSource/index.vue'),
         meta: {},
-    }
+    },
 ]
