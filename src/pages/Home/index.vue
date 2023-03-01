@@ -77,9 +77,14 @@ function openGithub() {
   height: 100%;
 }
 
-:deep(.sub-page .container) {
-  background-color: #fff;
-  padding: 10px;
-  min-width: 500px;
+:deep(.sub-page) {
+  .container {
+    background-color: #fff;
+    padding: 10px;
+    min-width: 500px;
+  }
+  .v-application__wrap {
+    min-height: 100%;
+  }
 }
 </style>

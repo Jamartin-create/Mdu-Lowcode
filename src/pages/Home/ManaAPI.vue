@@ -1,5 +1,5 @@
 <template>
-  <div class="container">api管理</div>
+  <v-app class="container">api管理</v-app>
 </template>
 
 <script setup lang="ts"></script>

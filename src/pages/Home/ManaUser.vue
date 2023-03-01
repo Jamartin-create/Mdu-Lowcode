@@ -41,7 +41,4 @@ function toEditor(param: any) {
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
 }
-:deep(.v-application__wrap) {
-  min-height: 100%;
-}
 </style>
