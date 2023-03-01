@@ -1,7 +1,7 @@
 import { createApp, render, getCurrentInstance } from 'vue'
 import type { App } from 'vue'
 import vuetify from '../../plugins/vuetify'
-import MessageConstructor from '../Message/Message.vue'
+import MessageConstructor from './message.vue'
 
 /**
  * @description 消息Toast hook

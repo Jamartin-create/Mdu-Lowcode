@@ -103,7 +103,7 @@ function onClone(data: any) {
 :deep(.wrapper) {
   .v-application__wrap {
     min-height: 100%;
-    padding: 15px;
+    padding: 25px;
   }
 }
 </style>

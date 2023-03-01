@@ -5,6 +5,9 @@
 html::-webkit-scrollbar{
   display: none;
 }
+*::selection{
+  display: none;
+}
 html, body, #app{
   height: 100%;
 }
