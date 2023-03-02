@@ -1,3 +1,4 @@
+import draggable from 'vuedraggable';
 <script setup lang="ts">
 const props = defineProps<{
   name: string;
@@ -5,7 +6,5 @@ const props = defineProps<{
   separateDirection: "row" | "column";
 }>();
 </script>
-<template>
-  <div></div>
-</template>
+<template></template>
 <style scoped></style>
