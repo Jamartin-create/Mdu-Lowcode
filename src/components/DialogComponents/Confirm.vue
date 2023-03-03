@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+const props = defineProps();
 const visible = ref<boolean>(false);
 function close() {
   visible.value = false;

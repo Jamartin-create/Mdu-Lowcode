@@ -69,6 +69,18 @@ function onClone(data: any) {
         </template>
       </draggable>
     </v-navigation-drawer>
+    <v-navigation-drawer
+      permanent
+      location="right"
+      v-model="drawer"
+      width="270"
+    >
+      <v-tabs>
+        <v-tab>样式</v-tab>
+        <v-tab>属性</v-tab>
+        <v-tab>数据</v-tab>
+      </v-tabs>
+    </v-navigation-drawer>
     <v-main>
       <div class="wrapper">
         <Panel />

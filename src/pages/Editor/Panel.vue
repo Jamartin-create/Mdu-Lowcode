@@ -5,7 +5,6 @@
       item-key="id"
       :group="{ name: 'component' }"
       handle=".handle"
-      @clone="onClone"
     >
       <template #item="{ element }">
         <div
@@ -18,7 +17,7 @@
             <v-icon icon="mdi-square-edit-outline"></v-icon>
             <v-icon
               icon="mdi-delete-outline"
-              @click="deleteItem(element.id)"
+              @click="deleteConfirm(element.id)"
             ></v-icon>
           </div>
           <component :is="element.tag" v-bind="element.props">{{
@@ -28,19 +27,37 @@
       </template>
     </draggable>
   </v-app>
+  <Dialog
+    ref="ConfirmDia"
+    :title="'提示'"
+    :content="'确认要删除该组件？'"
+    @cancel="deleteCancel"
+    @confirm="deleteItem"
+  />
 </template>
 
 <script setup lang="ts">
+import Dialog from "../../components/DialogComponents/Dialog.vue";
 import draggable from "vuedraggable";
 import { ref } from "vue";
 const componentList = ref<any[]>([]);
 const active = ref<string>("");
-function onClone(data: any) {
-  console.log(data);
+const ConfirmDia = ref<InstanceType<typeof Dialog>>();
+const delItem = ref<string>("");
+function deleteConfirm(id: string) {
+  delItem.value = id;
+  ConfirmDia.value?.open();
 }
-function deleteItem(id: string) {
+function deleteCancel() {
+  delItem.value = "";
+}
+function deleteItem() {
+  console.log("ddd");
   for (let i = 0; i < componentList.value.length; i++) {
-    if (componentList.value[i].id == id) componentList.value.splice(i, 1);
+    if (componentList.value[i].id == delItem.value) {
+      componentList.value.splice(i, 1);
+      break;
+    }
   }
 }
 </script>
