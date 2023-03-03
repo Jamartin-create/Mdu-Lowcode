@@ -10,7 +10,7 @@
         <div
           class="cmp-wrp"
           :class="{ active: element.id == active }"
-          @click.stop="active = element.id"
+          @click.stop="selectCom(element)"
         >
           <div class="tool">
             <v-icon icon="mdi-selection-drag" class="handle"></v-icon>
@@ -21,7 +21,7 @@
             ></v-icon>
           </div>
           <component :is="element.tag" v-bind="element.props">{{
-            element.tag == "v-btn" ? element.tagCN : ""
+            element.tag == "v-btn" ? element.props.text : ""
           }}</component>
         </div>
       </template>
@@ -40,8 +40,16 @@
 import Dialog from "../../components/DialogComponents/Dialog.vue";
 import draggable from "vuedraggable";
 import { ref } from "vue";
+const emits = defineEmits(["select"]);
 const componentList = ref<any[]>([]);
+//组件选中操作
 const active = ref<string>("");
+function selectCom(el: any) {
+  active.value = el.id;
+  emits("select", el);
+}
+
+//删除组件
 const ConfirmDia = ref<InstanceType<typeof Dialog>>();
 const delItem = ref<string>("");
 function deleteConfirm(id: string) {

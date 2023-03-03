@@ -2,34 +2,28 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Panel from "./Panel.vue";
-import draggable from "vuedraggable";
-import { guid } from "../../utils/common";
+import LeftSideBar from "./LeftSideBar.vue";
+import RightSiderBar from "./RightSiderBar.vue";
 const router = useRouter();
-const drawer = ref<boolean>(true);
-const componentList = ref<any[]>([
-  {
-    id: 1,
-    tag: "v-btn",
-    tagCN: "按钮",
-    props: {},
-  },
-  {
-    id: 2,
-    tag: "v-card",
-    tagCN: "卡片",
-    props: {
-      title: "标题",
-      subtitle: "测试子标题",
-      text: "测试内容",
-    },
-  },
-]);
 
-function onClone(data: any) {
-  let nD = JSON.parse(JSON.stringify(data));
-  console.log(nD);
-  nD.id = guid();
-  return nD;
+//左右Sider开合
+const LeftSider = ref<InstanceType<typeof LeftSideBar>>();
+const RightSider = ref<InstanceType<typeof RightSiderBar>>();
+const flag = ref<boolean>(true);
+function siderCtl() {
+  if (flag.value) {
+    LeftSider.value?.close();
+    RightSider.value?.close();
+  } else {
+    LeftSider.value?.open();
+    RightSider.value?.open();
+  }
+  flag.value = !flag.value;
+}
+
+//选中组件事件监听
+function onSelect(el: any) {
+  RightSider.value?.catchCom(el);
 }
 </script>
 
@@ -39,7 +33,7 @@ function onClone(data: any) {
       <template v-slot:prepend>
         <v-app-bar-nav-icon
           variant="text"
-          @click.stop="drawer = !drawer"
+          @click.stop="siderCtl"
         ></v-app-bar-nav-icon>
       </template>
       <v-btn
@@ -48,42 +42,11 @@ function onClone(data: any) {
         @click="router.push({ name: 'home' })"
       ></v-btn>
     </v-app-bar>
-    <v-navigation-drawer permanent v-model="drawer" width="180">
-      <v-tabs>
-        <v-tab>组件</v-tab>
-        <v-tab>图层</v-tab>
-      </v-tabs>
-      <draggable
-        :list="componentList"
-        class="draggable"
-        item-key="id"
-        :component-data="{ tag: 'v-list' }"
-        :group="{ name: 'component', pull: 'clone', put: false }"
-        :sort="false"
-        :clone="onClone"
-      >
-        <template #item="{ element }">
-          <div class="cmp-wrp">
-            {{ element.tagCN }}
-          </div>
-        </template>
-      </draggable>
-    </v-navigation-drawer>
-    <v-navigation-drawer
-      permanent
-      location="right"
-      v-model="drawer"
-      width="270"
-    >
-      <v-tabs>
-        <v-tab>样式</v-tab>
-        <v-tab>属性</v-tab>
-        <v-tab>数据</v-tab>
-      </v-tabs>
-    </v-navigation-drawer>
+    <LeftSideBar ref="LeftSider" />
+    <RightSiderBar ref="RightSider" />
     <v-main>
       <div class="wrapper">
-        <Panel />
+        <Panel @select="onSelect" />
       </div>
     </v-main>
   </v-app>
@@ -94,23 +57,6 @@ function onClone(data: any) {
   height: 100%;
   padding: 15px;
   background-color: #f4f4f4;
-}
-.cmp-type {
-  margin-top: 10px;
-  text-align: center;
-}
-.cmp-wrp {
-  padding: 10px;
-  text-align: center;
-  cursor: move;
-}
-.cmp-type:hover,
-.cmp-wrp:hover {
-  background-color: #ebebeb;
-}
-.draggable {
-  display: flex;
-  flex-direction: column;
 }
 :deep(.wrapper) {
   .v-application__wrap {
