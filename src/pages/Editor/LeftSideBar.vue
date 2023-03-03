@@ -55,6 +55,12 @@ const componentList = ref<any[]>([
       text: "测试内容",
     },
   },
+  {
+    id: 3,
+    tag: "EchartsTest",
+    tagCN: "测试Echarts",
+    props: {},
+  },
 ]);
 function onClone(data: any) {
   let nD = JSON.parse(JSON.stringify(data));

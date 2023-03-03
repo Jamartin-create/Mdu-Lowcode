@@ -10,4 +10,7 @@ import vuetify from './plugins/vuetify'
 //router
 import router from './router'
 
-createApp(App).use(router).use(vuetify).mount('#app')
+//asyncComponent
+import { AsyncComponent } from './resource/install'
+
+createApp(App).use(router).use(vuetify).use(AsyncComponent).mount('#app')
