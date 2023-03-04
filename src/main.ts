@@ -13,4 +13,12 @@ import router from './router'
 //asyncComponent
 import { AsyncComponent } from './resource/install'
 
-createApp(App).use(router).use(vuetify).use(AsyncComponent).mount('#app')
+//自定义指令
+import Directive from './plugins/directive'
+
+createApp(App)
+    .use(router)
+    .use(vuetify)
+    .use(AsyncComponent)
+    .use(Directive)
+    .mount('#app')

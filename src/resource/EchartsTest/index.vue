@@ -1,18 +1,24 @@
 <template>
-  <div id="test" :style="{ height: '200px', width: '300px' }"></div>
+  <div ref="ChartEl" :style="{ width: '100%', height: '200px' }"></div>
 </template>
 
 <script setup lang="ts">
-import * as echarts from "echarts";
-import { nextTick } from "vue";
-
-nextTick(() => {
-  const myChart = echarts.init(document.getElementById("test")!);
-  myChart.setOption({
+import { ref, onMounted } from "vue";
+import type { EChartsOption } from "echarts";
+import { useCharts } from "../../hooks/useCharts";
+const ChartEl = ref<ElRef>();
+const { updateEchart } = useCharts(ChartEl);
+function getOption() {
+  const option: EChartsOption = {
     title: {
-      text: "ECharts 入门示例",
+      text: "测试条形图",
     },
-    tooltip: {},
+    tooltip: {
+      trigger: "item",
+      formatter: function (params: any) {
+        return "value:" + params.value;
+      },
+    },
     xAxis: {
       data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
     },
@@ -24,7 +30,11 @@ nextTick(() => {
         data: [5, 20, 36, 10, 10, 20],
       },
     ],
-  });
+  };
+  return option as EChartsOption;
+}
+onMounted(async () => {
+  updateEchart(getOption());
 });
 </script>
 
