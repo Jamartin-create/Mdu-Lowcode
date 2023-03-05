@@ -6,6 +6,6 @@ const secret = 'salt'
 const expiresTime = '5d'
 
 //生成token
-export function sign(userInfo: User) {
+export function sign(userInfo: Partial<User>) {
     return 'Bearer ' + jwt.sign(userInfo, secret, { expiresIn: expiresTime })
 }
