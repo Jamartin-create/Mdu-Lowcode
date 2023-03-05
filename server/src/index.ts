@@ -1,7 +1,7 @@
 import Server from "./plugin/server";
-// import { connect } from "./db/mongoDB";
+import { connect } from "./db/mongoDB";
 
-// connect();
+connect();
 
 const server = new Server();
 server.startServer();

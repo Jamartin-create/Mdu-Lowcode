@@ -10,6 +10,5 @@ export abstract class BaseComponent {
             this.id = guid();
         }
         this.component = detail.component
-
     }
 }

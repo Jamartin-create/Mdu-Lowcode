@@ -1,33 +1,38 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from 'express';
 import { useModel } from '../db/mongoDB'
 import { UserSchema } from "../db/mongoDB/schema/business";
 import { Document } from "mongodb";
+import ErrCode from '../common/exception'
 
 const UserModel = useModel('user', UserSchema);
 
 export default class UserService {
-    static userRegister = async (req: Request, res: Response) => {
+
+    //注册
+    static userRegister = async (req: Request, res: Response, next: NextFunction) => {
         const { body } = req;
+        const user = await UserModel.find({ 'userName': body.userName });
+        if (user != null) return next(ErrCode.USERNAME_CONFILICT_EXCEPTION);
         const entity = new UserModel({
             userName: body.userName,
             userPwd: body.password
         });
         entity.save(err => {
-            if (err) res.send({ code: -1, msg: '失败' });
+            if (err) return next(ErrCode.SELECT_MG_EXCEPTION);
             res.send({ code: 0, msg: '成功' });
         })
     }
-    static userLogin = async (req: Request, res: Response) => {
-        const { body } = req;
-        UserModel.find({
-            userName: body.userName,
-            userPwd: body.password
-        }, (err: any, docs: Document[]) => {
-            if (err) {
-                res.send(err);
-                return;
-            }
-            res.send(docs)
-        })
+
+    //登录
+    static userLogin = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { body } = req;
+            const user = await UserModel.find({ 'userName': body.userName });
+            if (user.length == 0) return next(ErrCode.USER_NOT_FOUND_EXCEPTION);
+            if (user[0].userPwd != body.userPwd) return next(ErrCode.FORBIDEN_PWD_EXCEPTION);
+            res.send({ code: 0, msg: '登录成功', data: user[0] })
+        } catch (e) {
+
+        }
     }
 }
