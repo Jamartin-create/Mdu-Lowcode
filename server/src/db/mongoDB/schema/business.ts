@@ -13,6 +13,7 @@ export const TestSchema = new MySchema({
  * 用户Schema
  */
 export const UserSchema = new MySchema({
+    userId: String,
     userName: String,
     userAge: Number,
     userGender: String,

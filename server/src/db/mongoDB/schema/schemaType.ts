@@ -7,11 +7,12 @@ export type BusinessBaseEntity = {
 }
 
 export type User = {
-    userName: string;
-    userAge?: number;
-    userGender?: '男' | '女';
-    userPwd: string;
-    userEmail?: string;
+    userId?: string;
+    userName?: string;
+    userAge?: number | null;
+    userGender?: '男' | '女' | '未知';
+    userPwd?: string;
+    userEmail?: string | null;
 }
 
 export type Test = {
