@@ -16,7 +16,11 @@ import { AsyncComponent } from './resource/install'
 //自定义指令
 import Directive from './plugins/directive'
 
+//pinia
+import pinia from './store'
+
 createApp(App)
+    .use(pinia)
     .use(router)
     .use(vuetify)
     .use(AsyncComponent)

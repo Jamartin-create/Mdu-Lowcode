@@ -26,7 +26,7 @@
           ></v-text-field>
           <v-text-field
             v-model="rePassword"
-            :rules="rule.password"
+            :rules="rule.rePassword"
             type="password"
             label="re-password"
             required
@@ -42,24 +42,40 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { rule } from "./login";
-const router = useRouter();
+import { UserStore } from "../../store/modules/user";
 const password = ref<string>("");
 const rePassword = ref<string>("");
 const username = ref<string>("");
 const valid = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
+const userPinia = UserStore();
+
+const rule = {
+  username: [(v: string) => !!v || "请输入用户名"],
+  password: [(v: string) => !!v || "请输入密码"],
+  rePassword: [
+    (v: string) => {
+      if (!v) return "请再次输入密码";
+      if (v != password.value) return "两次密码输入不一致哦";
+      return true;
+    },
+  ],
+};
+
 const loginForm = ref<any>();
+
 async function validate() {
   const { valid } = await loginForm.value.validate();
   if (!valid) return;
   loading.value = true;
-  setTimeout(() => {
+  try {
+    await userPinia.register(username.value, password.value);
+  } catch (e) {
+    console.error(e);
+  } finally {
     loading.value = false;
-    router.push({ name: "login" });
-  }, 3000);
+  }
 }
 </script>
 
