@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { RouterView } from "vue-router";
+import { UserStore } from "./store/modules/user";
+import router from "./router";
+const userPinia = UserStore();
+if (!userPinia.checkIsLogin()) {
+  //TODO:消息提示组件
+  console.log("请登录");
+  router.push({ name: "login" });
+}
 </script>
 
 <template>

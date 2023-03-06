@@ -37,8 +37,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { UserStore } from "../../store/modules/user";
 import { rule } from "./login";
 const router = useRouter();
+const userPinia = UserStore();
 const loading = ref<boolean>(false);
 const valid = ref<boolean>(false);
 const username = ref<string>("");
@@ -49,10 +51,13 @@ async function validate() {
   const { valid } = await loginForm.value.validate();
   if (!valid) return;
   loading.value = true;
-  setTimeout(() => {
+  try {
+    await userPinia.login(username.value, password.value);
+  } catch (e) {
+    console.error(e);
+  } finally {
     loading.value = false;
-    router.push({ name: "home" });
-  }, 3000);
+  }
 }
 </script>
 

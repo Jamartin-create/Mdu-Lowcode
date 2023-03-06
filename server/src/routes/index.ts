@@ -10,7 +10,7 @@ routes.use(expressjwt({
     algorithms: ['HS256']
 }).unless({ path: ['/api/v1/login/', '/api/v1/register/'] }))
 
-routes.get('/api/v1/login', UserService.userLogin)
+routes.post('/api/v1/login', UserService.userLogin)
 routes.post('/api/v1/register', UserService.userRegister)
 routes.route('/api/v1/user/')
     .get(UserService.userInfo)

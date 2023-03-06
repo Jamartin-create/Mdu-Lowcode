@@ -24,6 +24,23 @@ export const UserStore = defineStore({
             console.log('注册成功');
             router.push({ name: 'login' })
         },
+        async login(userName: string, userPwd: string) {
+            const res: ResType = await UserApi.login({ userName, userPwd });
+            if (res.code != 0) {
+                console.error(res.msg);
+                return;
+            }
+            //TODO:封装消息提示组件后完善
+            console.log('登陆成功', res);
+            const { data } = res;
+            this.token = data.token;
+            router.push({ name: 'home' })
+        },
+        checkIsLogin() {
+            const token = this.token;
+            if (!token) return false;
+            return true;
+        },
         reset() {
             this.$reset();
         }

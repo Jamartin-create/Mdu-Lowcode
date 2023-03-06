@@ -44,7 +44,7 @@ export default class UserService {
 
     //登录
     static userLogin = async (req: Request, res: Response, next: NextFunction) => {
-        const { query: { userName, userPwd } } = req;
+        const { body: { userName, userPwd } } = req;
         if (!userName || !userPwd) return next(ErrCode.PARAM_EXCEPTION);
         const user = await UserModel.find({ 'userName': userName });
         if (user.length == 0) return next(ErrCode.USER_NOT_FOUND_EXCEPTION);
