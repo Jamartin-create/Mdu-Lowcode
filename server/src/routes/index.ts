@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { expressjwt } from "express-jwt";
 import userRoutes from "./user";
-import itemRoutes from './items'
+import itemRoutes from './items';
+import groupRoutes from './group';
 
 //v1版本路由
 const v1 = Router();
 v1.use(userRoutes);
 v1.use(itemRoutes);
+v1.use(groupRoutes);
 
 
 //路由

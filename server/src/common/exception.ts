@@ -33,7 +33,8 @@ export const ErrCode = {
     FORBIDEN_TOKEN_EXCPETION: generatorError({ code: 90005, msg: 'token验证失败' }),
     USER_NOT_FOUND_EXCEPTION: generatorError({ code: 90006, msg: '用户未找到' }),
     USERNAME_CONFILICT_EXCEPTION: generatorError({ code: 90007, msg: '用户名冲突' }),
-    EXCEUTE_EXCEPTION: generatorError({ code: 90008, msg: '执行异常' })
+    EXCEUTE_EXCEPTION: generatorError({ code: 90008, msg: '执行异常' }),
+    GROUP_NOT_FOUD_EXCEPTION: generatorError({ code: 90009, msg: '未找到组件组' })
 }
 
 //请求异常捕获（链式调用结尾）
