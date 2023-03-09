@@ -57,14 +57,15 @@ export const CompSchema = new MySchema({
 }).getSchema();
 
 /**
- * Api Schema
+ * 数据源 Schema
  * ds: dataSource
  */
-export const APISchema = new MySchema({
+export const DataSourceSchema = new MySchema({
     dsId: String,
     dsTitle: String,
-    dsColumn: Array<String>,
-    dsStaticDatas: Array<Object>,
+    dsNumbers: Number,
+    dsColumns: Array<String>,
+    dsStaticDatas: Array<Array<Number>>,
     dsApiPath: String,
     dsPath: String,
 }).getSchema();

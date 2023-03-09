@@ -25,6 +25,7 @@ function generatorError(code: MyErrorCode): MyError {
     return new MyError(code);
 }
 
+//错误码定义
 export const ErrCode = {
     PARAM_EXCEPTION: generatorError({ code: 90001, msg: '参数异常，请检查所传参数的完整性与正确性' }),
     SELECT_MG_EXCEPTION: generatorError({ code: 90002, msg: 'MongoDB数据库查询异常' }),
@@ -35,7 +36,8 @@ export const ErrCode = {
     USERNAME_CONFILICT_EXCEPTION: generatorError({ code: 90007, msg: '用户名冲突' }),
     EXCEUTE_EXCEPTION: generatorError({ code: 90008, msg: '执行异常' }),
     GROUP_NOT_FOUD_EXCEPTION: generatorError({ code: 90009, msg: '未找到组件组' }),
-    ITEM_NOT_FOUND_EXCEPTION: generatorError({ code: 90010, msg: '未找到项目' })
+    ITEM_NOT_FOUND_EXCEPTION: generatorError({ code: 90010, msg: '未找到项目' }),
+    DATASOURCE_NOT_FOUND_EXCEPTION: generatorError({ code: 90011, msg: '未找到数据源' })
 }
 
 //请求异常捕获（链式调用结尾）
