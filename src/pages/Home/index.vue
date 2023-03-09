@@ -10,7 +10,7 @@
       <v-btn variant="text" icon="mdi-account" id="menu-activator"> </v-btn>
       <v-menu location="start" activator="#menu-activator">
         <v-list>
-          <v-list-item value="logout" @click="router.push({ name: 'login' })">
+          <v-list-item value="logout" @click="logout">
             <v-list-item-title>
               <v-icon icon="mdi-logout"></v-icon>
               登出
@@ -58,6 +58,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { UserStore } from "../../store/modules/user";
+const userPinia = UserStore();
 const router = useRouter();
 const drawer = ref<boolean>(true);
 
@@ -67,6 +69,10 @@ function toSubPage(pageName: string) {
 }
 function openGithub() {
   window.open("https://github.com/jamartin-create");
+}
+function logout() {
+  router.push({ name: "login" });
+  userPinia.reset();
 }
 </script>
 

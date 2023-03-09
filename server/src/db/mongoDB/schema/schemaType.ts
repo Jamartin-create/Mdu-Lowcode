@@ -15,8 +15,32 @@ export interface User extends BusinessBaseEntity {
     userEmail: string | null;
 }
 
+export interface Item extends BusinessBaseEntity {
+    itemId: string;
+    itemTitle: string;
+    itemPublic: boolean;
+    itemDescription: string;
+    itemPublicPage: string;
+    userId: string;
+    groupId: string;
+}
+
 export type Test = {
     name: string;
     age: number;
     gender: string;
+}
+
+export interface CompProp {
+    id: Number,
+    name: String,
+    text: String,
+    type: 'text' | 'select',
+}
+
+export interface CompStyle {
+    id: Number,
+    name: String,
+    text: String,
+    type: 'text' | 'color' | 'select',
 }

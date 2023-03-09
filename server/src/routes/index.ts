@@ -1,7 +1,15 @@
 import { Router } from "express";
-import UserService from '../service/user';
 import { expressjwt } from "express-jwt";
+import userRoutes from "./user";
+import itemRoutes from './items'
 
+//v1版本路由
+const v1 = Router();
+v1.use(userRoutes);
+v1.use(itemRoutes);
+
+
+//路由
 const routes = Router();
 
 routes.use(expressjwt({
@@ -10,10 +18,7 @@ routes.use(expressjwt({
     algorithms: ['HS256']
 }).unless({ path: ['/api/v1/login/', '/api/v1/register/'] }))
 
-routes.post('/api/v1/login', UserService.userLogin)
-routes.post('/api/v1/register', UserService.userRegister)
-routes.route('/api/v1/user/')
-    .get(UserService.userInfo)
 
+routes.use('/api/v1', v1);
 
 export default routes;

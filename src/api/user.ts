@@ -5,12 +5,12 @@ type PromiseRes = Promise<ResType>;
 
 export default class UserApi {
     static register(params: any): PromiseRes {
-        return Request.post(`${api}/register/`, params)
+        return Request.post(`${api}/register`, params)
     }
     static login(params: any): PromiseRes {
-        return Request.post(`${api}/login/`, params)
+        return Request.post(`${api}/login`, params)
     }
     static getUserInfo(): PromiseRes {
-        return Request.get(`${api}/user/`)
+        return Request.get(`${api}/user`)
     }
 }

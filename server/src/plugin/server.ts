@@ -1,6 +1,6 @@
 import morgan from 'morgan'
 import express from 'express'
-import { catchException } from '../utils/exceptionSovle'
+import { catchException } from '../common/exception'
 import cors from 'cors'
 import { json, urlencoded } from 'body-parser'
 import routes from '../routes/index'

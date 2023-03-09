@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { useModel } from '../db/mongoDB'
 import { UserSchema } from "../db/mongoDB/schema/business";
-import ErrCode from '../common/exception'
+import { ErrCode } from '../common/exception'
 import { setPassword, guid } from '../utils/strHandler';
-import { User, BusinessBaseEntity } from '../db/mongoDB/schema/schemaType';
-import { sign } from '../utils/auth';
+import { User } from '../db/mongoDB/schema/schemaType';
+import { sign, getUserInfo } from '../utils/auth';
 import { initSchemaInfo } from '../utils/dataFilled';
 
 const UserModel = useModel('user', UserSchema);
@@ -60,6 +60,6 @@ export default class UserService {
 
     //获取用户信息
     static userInfo = async (req: Request, res: Response, next: NextFunction) => {
-        res.send(req['auth' as keyof typeof req])
+        res.send(getUserInfo(req))
     }
 }
