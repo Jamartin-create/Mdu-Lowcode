@@ -5,7 +5,7 @@ import { ErrCode } from '../common/exception'
 import { getUserInfo } from '../utils/auth';
 import { Item } from '../db/mongoDB/schema/schemaType';
 import { guid } from '../utils/strHandler';
-import { initSchemaInfo } from '../utils/dataFilled';
+import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 
 const ItemModel = useModel('item', ItemSchema);
 
@@ -54,6 +54,37 @@ export default class ItemService {
 
     //编辑
     static editItem = async (req: Request, res: Response, next: NextFunction) => {
-        //验证用户身份
+        const { body: { itemTitle, itemDescription, itemId, itemPublic, itemPublicPage } } = req;
+        if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
+        const [item] = await ItemModel.find({ itemId });
+        if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
+        try {
+            await ItemModel.updateOne({ itemId }, {
+                itemTitle: itemTitle || item.itemTitle,
+                itemDescription: itemDescription || item.itemDescription,
+                itemPublic: itemPublic || item.itemPublic,
+                itemPublicPage: itemPublicPage || item.itemPublicPage,
+                ...updateSchemaInfo(getUserInfo(req).userId)
+            })
+            res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.error(e.message);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
+
+    //删除
+    static delItem = async (req: Request, res: Response, next: NextFunction) => {
+        const { body: { itemId } } = req;
+        if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
+        const [item] = await ItemModel.find({ itemId });
+        if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
+        try {
+            await ItemModel.deleteOne({ itemId });
+            res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.error(e.message);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
     }
 }
