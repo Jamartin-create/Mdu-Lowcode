@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { useModel } from '../db/mongoDB'
 import { UserSchema } from "../db/mongoDB/schema/business";
-import { ErrCode } from '../common/exception'
+import { ErrCode, exceptionOnSave } from '../common/exception';
 import { setPassword, guid } from '../utils/strHandler';
 import { User } from '../db/mongoDB/schema/schemaType';
 import { sign, getUserInfo } from '../utils/auth';
@@ -28,18 +28,11 @@ export default class UserService {
         if (!userName || !userPwd) return next(ErrCode.PARAM_EXCEPTION);
         const user = await UserModel.find({ 'userName': userName });
         if (user.length != 0) return next(ErrCode.USERNAME_CONFILICT_EXCEPTION);
-        const entity = new UserModel({
+        exceptionOnSave(new UserModel({
             userName: userName,
             userPwd: setPassword(userPwd),
             ...fillUserInfo()
-        });
-        entity.save(err => {
-            if (err) {
-                console.log(err.message);
-                return next(ErrCode.SELECT_MG_EXCEPTION);
-            }
-            res.send({ code: 0, msg: '成功' });
-        })
+        }), res, next);
     }
 
     //登录
@@ -59,7 +52,7 @@ export default class UserService {
     }
 
     //获取用户信息
-    static userInfo = async (req: Request, res: Response, next: NextFunction) => {
+    static userInfo = async (req: Request, res: Response) => {
         res.send(getUserInfo(req))
     }
 }

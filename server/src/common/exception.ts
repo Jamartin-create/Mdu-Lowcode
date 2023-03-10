@@ -1,4 +1,5 @@
 import { Response, NextFunction, Request } from 'express';
+import { Error as MongoErr } from 'mongoose'
 
 export type MyErrorCode = {
     code: number;
@@ -52,4 +53,16 @@ export function catchException(err: Error, req: Request, res: Response, next: Ne
         res.send({ code, msg })
     }
     next(err);
+}
+
+//持久化异常
+export function exceptionOnSave(entity: any, res: Response, next: NextFunction) {
+    entity.save((err: MongoErr) => {
+        if (err) {
+            console.error(err);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+            return;
+        }
+        res.send({ code: 0, msg: 'success' });
+    })
 }

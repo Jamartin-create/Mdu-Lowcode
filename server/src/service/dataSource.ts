@@ -1,7 +1,7 @@
 import { DataSourceSchema } from "../db/mongoDB/schema/business";
 import { useModel } from '../db/mongoDB/index';
 import { Request, Response, NextFunction } from 'express';
-import { ErrCode } from '../common/exception';
+import { ErrCode, exceptionOnSave } from '../common/exception';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 import { getUserInfo } from '../utils/auth';
 import { guid } from '../utils/strHandler';
@@ -13,7 +13,7 @@ export default class DataSourceService {
     static saveDS = async (req: Request, res: Response, next: NextFunction) => {
         const { body: { dsTitle, dsColumns, dsNumbers, dsStaticDatas, dsApiPath, dsPath } } = req;
         if (!dsTitle || !dsNumbers || !dsPath || !dsColumns || (!dsStaticDatas && !dsApiPath)) return next(ErrCode.PARAM_EXCEPTION);
-        new dsModel({
+        exceptionOnSave(new dsModel({
             dsId: guid(),
             dsTitle,
             dsNumbers,
@@ -22,14 +22,7 @@ export default class DataSourceService {
             dsApiPath: dsApiPath || null,
             dsPath,
             ...initSchemaInfo(getUserInfo(req).userId)
-        }).save(err => {
-            if (err) {
-                console.error(err.message);
-                next(ErrCode.SELECT_MG_EXCEPTION);
-                return;
-            }
-            res.send({ code: 0, msg: 'success' });
-        })
+        }), res, next);
     }
 
     /**

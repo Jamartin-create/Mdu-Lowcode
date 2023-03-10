@@ -1,7 +1,7 @@
 import { CompSchema } from "../db/mongoDB/schema/business";
 import { useModel } from '../db/mongoDB/index';
 import { Request, Response, NextFunction } from 'express';
-import { ErrCode } from '../common/exception';
+import { ErrCode, exceptionOnSave } from '../common/exception';
 import { guid } from '../utils/strHandler';
 import { initSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
@@ -24,7 +24,7 @@ export default class ComponentService {
     static saveOne = (req: Request, res: Response, next: NextFunction) => {
         const { body: { compName, compTitle, compType, compProps, compStyles, dataSourceId } } = req;
         if (!compTitle || !compType || !compProps || !compStyles || (compType == "visualize" && !dataSourceId)) return next(ErrCode.PARAM_EXCEPTION);
-        new compModel({
+        exceptionOnSave(new compModel({
             compId: guid(),
             compName,
             compTitle,
@@ -33,13 +33,6 @@ export default class ComponentService {
             compStyles,
             dataSourceId,
             ...initSchemaInfo(getUserInfo(req).userId)
-        }).save(err => {
-            if (err) {
-                console.error(err.message);
-                next(ErrCode.SELECT_MG_EXCEPTION);
-                return;
-            }
-            res.send({ code: 0, msg: 'success' });
-        })
+        }), res, next);
     }
 }

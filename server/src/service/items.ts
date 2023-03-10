@@ -1,7 +1,7 @@
 import { useModel } from "../db/mongoDB";
 import { ItemSchema } from '../db/mongoDB/schema/business';
 import { NextFunction, Request, Response } from 'express';
-import { ErrCode } from '../common/exception'
+import { ErrCode, exceptionOnSave } from '../common/exception';
 import { getUserInfo } from '../utils/auth';
 import { Item } from '../db/mongoDB/schema/schemaType';
 import { guid } from '../utils/strHandler';
@@ -38,18 +38,11 @@ export default class ItemService {
         const { body: { itemTitle, itemDescription } } = req;
         if (!itemTitle) return next(ErrCode.PARAM_EXCEPTION);
         const user = getUserInfo(req);
-        new ItemModel({
+        exceptionOnSave(new ItemModel({
             itemTitle: itemTitle,
             itemDescription: itemDescription || '',
             ...fillItemInfo(user.userId, '暂空'),
-        }).save(err => {
-            if (err) {
-                console.error(err.message);
-                next(ErrCode.SELECT_MG_EXCEPTION);
-                return;
-            }
-            res.send({ code: 0, msg: '成功' });
-        })
+        }), res, next);
     }
 
     //编辑

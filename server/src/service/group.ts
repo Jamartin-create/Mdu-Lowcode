@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ErrCode } from '../common/exception';
+import { ErrCode, exceptionOnSave } from '../common/exception';
 import { getUserInfo } from '../utils/auth';
 import { GroupSchema } from '../db/mongoDB/schema/business';
 import { useModel } from '../db/mongoDB/index';
@@ -14,19 +14,12 @@ export default class GroupService {
         const { body: { groupTitle, groupJson } } = req;
         if (!groupTitle || !groupJson) return next(ErrCode.PARAM_EXCEPTION);
         const user = getUserInfo(req);
-        new groupModel({
+        exceptionOnSave(new groupModel({
             groupTitle,
             groupJson,
             groupId: guid(),
             ...initSchemaInfo(user.userId)
-        }).save(err => {
-            if (err) {
-                console.error(err);
-                next(ErrCode.SELECT_MG_EXCEPTION);
-                return;
-            }
-            res.send({ code: 0, msg: 'success' });
-        })
+        }), res, next);
     }
     //编辑组件组
     static editOne = async (req: Request, res: Response, next: NextFunction) => {
