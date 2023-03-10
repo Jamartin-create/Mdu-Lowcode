@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { UserStore } from "../store/modules/user";
 
 function errorHandler(status: number, other: string) {
     // 状态码判断
@@ -63,7 +64,10 @@ function reqInter(config: AxiosRequestConfig<any>) {
     config.cancelToken = new CancelToken((c) => {
         pending.push({ url: config.url, method: config.method as Method, params: config.params, data: config.data, cancel: c });
     })
-    //TODO: token验证
+    const userPinia = UserStore();
+    if (userPinia.checkIsLogin()) {
+        config.headers!.Authorization = userPinia.token;
+    }
     return config;
 }
 
@@ -98,7 +102,6 @@ function resInterErr(error: any) {
     if (response) {
         errorHandler(response.status, response.data.message);
         //TODO: 超时重新请求
-
         return Promise.reject(response);
     } else {
         //网络异常

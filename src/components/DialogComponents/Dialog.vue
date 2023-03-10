@@ -5,12 +5,8 @@
       <v-card-text>{{ content }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green-darken-1" variant="text" @click="cancel">
-          取消
-        </v-btn>
-        <v-btn color="green-darken-1" variant="text" @click="confirm">
-          确认
-        </v-btn>
+        <v-btn variant="text" @click="cancel"> 取消 </v-btn>
+        <v-btn variant="text" @click="confirm"> 确认 </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

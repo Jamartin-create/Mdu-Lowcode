@@ -4,7 +4,15 @@ import { useRouter } from "vue-router";
 import Panel from "./Panel.vue";
 import LeftSideBar from "./LeftSideBar.vue";
 import RightSiderBar from "./RightSiderBar.vue";
+import DiaSaveItem from "./components/DiaSaveItem.vue";
+import ItemApi from "../../api/item";
+import { ItemType } from "../../api/item";
+import { ItemStore } from "../../store/modules/item";
+
 const router = useRouter();
+const itemPinia = ItemStore();
+
+const DiaOnSave = ref<InstanceType<typeof DiaSaveItem>>();
 
 //左右Sider开合
 const LeftSider = ref<InstanceType<typeof LeftSideBar>>();
@@ -25,6 +33,12 @@ function siderCtl() {
 function onSelect(el: any) {
   RightSider.value?.catchCom(el);
 }
+
+//保存项目
+async function saveItem(params: ItemType) {
+  //TODO: 组件组合数据拼接（涉及到引擎开发）
+  itemPinia.saveCurItem(params);
+}
 </script>
 
 <template>
@@ -36,6 +50,11 @@ function onSelect(el: any) {
           @click.stop="siderCtl"
         ></v-app-bar-nav-icon>
       </template>
+      <v-btn
+        icon="mdi-content-save-outline"
+        variant="text"
+        @click="DiaOnSave?.open()"
+      ></v-btn>
       <v-btn
         variant="text"
         icon="mdi-close"
@@ -49,6 +68,7 @@ function onSelect(el: any) {
         <Panel @select="onSelect" />
       </div>
     </v-main>
+    <DiaSaveItem ref="DiaOnSave" @save="saveItem" />
   </v-app>
 </template>
 

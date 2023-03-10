@@ -22,7 +22,7 @@ export const UserStore = defineStore({
             }
             //TODO:封装消息提示组件后完善
             console.log('注册成功');
-            router.push({ name: 'login' })
+            router.push({ name: 'login' });
         },
         async login(userName: string, userPwd: string) {
             const res: ResType = await UserApi.login({ userName, userPwd });
