@@ -7,6 +7,7 @@ const routes = Router();
 routes.get('/item/list', ItemService.getList)
 
 //项目的CU
+routes.get('/item/:itemId', ItemService.getById)
 routes.route('/item')
     .post(ItemService.saveItem)
     .put(ItemService.editItem)

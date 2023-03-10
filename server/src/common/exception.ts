@@ -56,13 +56,21 @@ export function catchException(err: Error, req: Request, res: Response, next: Ne
 }
 
 //持久化异常
-export function exceptionOnSave(entity: any, res: Response, next: NextFunction) {
+export function exceptionOnSave(entity: any, res: Response, next: NextFunction, callback?: Function) {
     entity.save((err: MongoErr) => {
         if (err) {
             console.error(err);
             next(ErrCode.SELECT_MG_EXCEPTION);
             return;
         }
-        res.send({ code: 0, msg: 'success' });
+        const options = {
+            code: 0,
+            msg: 'success'
+        }
+        if (callback) {
+            callback(options);
+            return;
+        }
+        res.send(options);
     })
 }

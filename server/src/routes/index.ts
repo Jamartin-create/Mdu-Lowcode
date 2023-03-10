@@ -22,7 +22,7 @@ routes.use(expressjwt({
     secret: 'salt',
     requestProperty: 'auth',
     algorithms: ['HS256']
-}).unless({ path: ['/api/v1/login', '/api/v1/register'] }))
+}).unless({ path: [/^\/api\/v1\/auth\/.*/] }))
 
 
 routes.use('/api/v1', v1);

@@ -31,18 +31,39 @@ export default class ItemService {
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         const user = getUserInfo(req);
         const ret = await ItemModel.find({ 'userId': user.userId });
-        res.send(ret);
+        res.send({ code: 0, msg: 'success', data: ret });
     }
+
+    //根据Id查询项目
+    static getById = async (req: Request, res: Response, next: NextFunction) => {
+        const { params: { itemId } } = req;
+        try {
+            const [item] = await ItemModel.find({ "itemId": itemId });
+            console.log(item);
+            if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: item });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.EXCEUTE_EXCEPTION);
+        }
+    }
+
     //新增
     static saveItem = async (req: Request, res: Response, next: NextFunction) => {
         const { body: { itemTitle, itemDescription } } = req;
         if (!itemTitle) return next(ErrCode.PARAM_EXCEPTION);
         const user = getUserInfo(req);
-        exceptionOnSave(new ItemModel({
+        const entity = new ItemModel({
             itemTitle: itemTitle,
             itemDescription: itemDescription || '',
             ...fillItemInfo(user.userId, '暂空'),
-        }), res, next);
+        });
+        exceptionOnSave(entity, res, next, (options: any) => {
+            res.send({
+                ...options,
+                data: entity.itemId
+            })
+        });
     }
 
     //编辑

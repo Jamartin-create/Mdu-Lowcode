@@ -53,6 +53,6 @@ export default class UserService {
 
     //获取用户信息
     static userInfo = async (req: Request, res: Response) => {
-        res.send(getUserInfo(req))
+        res.send({ code: 0, msg: 'success', data: getUserInfo(req) });
     }
 }
