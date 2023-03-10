@@ -31,11 +31,14 @@ export type Test = {
     gender: string;
 }
 
+
+//selectGroup，需配置字典（后端配置），这里放置字典ID
 export interface CompProp {
     id: Number,
     name: String,
     text: String,
     type: 'text' | 'select',
+    selectGroup: String,
 }
 
 export interface CompStyle {
@@ -43,4 +46,5 @@ export interface CompStyle {
     name: String,
     text: String,
     type: 'text' | 'color' | 'select',
+    selectGroup: String,
 }

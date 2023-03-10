@@ -3,6 +3,7 @@ import { expressjwt } from "express-jwt";
 import userRoutes from "./user";
 import itemRoutes from './items';
 import groupRoutes from './group';
+import componentRoutes from './component'
 import dataSourceRoutes from './dataSource'
 
 //v1版本路由
@@ -10,6 +11,7 @@ const v1 = Router();
 v1.use(userRoutes);
 v1.use(itemRoutes);
 v1.use(groupRoutes);
+v1.use(componentRoutes);
 v1.use(dataSourceRoutes);
 
 

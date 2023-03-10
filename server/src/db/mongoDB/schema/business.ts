@@ -50,7 +50,9 @@ export const GroupSchema = new MySchema({
  */
 export const CompSchema = new MySchema({
     compId: String,
+    compName: String,
     compTitle: String,
+    compType: String,
     compProps: Array<CompProp>,
     compStyles: Array<CompStyle>,
     dataSourceId: String,
