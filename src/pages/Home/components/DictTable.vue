@@ -1,30 +1,38 @@
 <template>
-  <v-table density="comfortable">
-    <thead>
-      <tr>
-        <th class="text-left">字典类型ID</th>
-        <th class="text-left">字典类型名称</th>
-        <th class="text-left">字典类型编码</th>
-        <th class="text-left">入口数量</th>
-        <th class="text-center" width="230px">操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="dict in dictList" :key="dict.sgtId">
-        <td>{{ dict.sgtId }}</td>
-        <td>{{ dict.sgtName }}</td>
-        <td>{{ dict.sgtCode }}</td>
-        <td>待定</td>
-        <td>
-          <v-btn variant="text" @click="dictEntryTableDia?.open(dict.sgtId)">
-            详情
-          </v-btn>
-          <v-btn variant="text">删除</v-btn>
-          <v-btn variant="text">编辑</v-btn>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-card>
+    <v-card-text>
+      <v-btn variant="tonal">新增</v-btn>
+      <v-table density="comfortable">
+        <thead>
+          <tr>
+            <th class="text-left">字典类型ID</th>
+            <th class="text-left">字典类型名称</th>
+            <th class="text-left">字典类型编码</th>
+            <th class="text-left">入口数量</th>
+            <th class="text-center" width="230px">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="dict in dictList" :key="dict.sgtId">
+            <td>{{ dict.sgtId }}</td>
+            <td>{{ dict.sgtName }}</td>
+            <td>{{ dict.sgtCode }}</td>
+            <td>待定</td>
+            <td>
+              <v-btn
+                variant="text"
+                @click="dictEntryTableDia?.open(dict.sgtId)"
+              >
+                详情
+              </v-btn>
+              <v-btn variant="text">删除</v-btn>
+              <v-btn variant="text">编辑</v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+    </v-card-text>
+  </v-card>
   <DictEntryTableDialog ref="dictEntryTableDia" />
 </template>
 

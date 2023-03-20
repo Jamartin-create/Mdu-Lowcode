@@ -5,7 +5,9 @@
       <v-tab value="dict">配置项字典</v-tab>
     </v-tabs>
     <v-window v-model="tab">
-      <v-window-item value="comp">物料</v-window-item>
+      <v-window-item value="comp">
+        <CompTable />
+      </v-window-item>
       <v-window-item value="dict">
         <DictTable />
       </v-window-item>
@@ -15,6 +17,7 @@
 
 <script setup lang="ts">
 import DictTable from "./components/DictTable.vue";
+import CompTable from "./components/CompTable.vue";
 import { ref } from "vue";
 
 const tab = ref<string>("comp");
