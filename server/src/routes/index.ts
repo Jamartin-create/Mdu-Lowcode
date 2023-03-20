@@ -5,6 +5,7 @@ import itemRoutes from './items';
 import groupRoutes from './group';
 import componentRoutes from './component'
 import dataSourceRoutes from './dataSource'
+import DictRoutes from './dict'
 
 //v1版本路由
 const v1 = Router();
@@ -13,7 +14,7 @@ v1.use(itemRoutes);
 v1.use(groupRoutes);
 v1.use(componentRoutes);
 v1.use(dataSourceRoutes);
-
+v1.use(DictRoutes);
 
 //路由
 const routes = Router();

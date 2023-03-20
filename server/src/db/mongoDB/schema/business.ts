@@ -71,3 +71,27 @@ export const DataSourceSchema = new MySchema({
     dsApiPath: String,
     dsPath: String,
 }).getSchema();
+
+
+/**
+ * 字典-type
+ * sgt：selectGroupType
+ */
+export const SgtSchema = new MySchema({
+    sgtId: String,
+    sgtName: String,
+    sgtCode: String,
+}).getSchema();
+
+
+/**
+ * 字典-entry
+ * sge：selectGroupEntry
+ */
+export const SgeSchema = new MySchema({
+    sgeId: String,
+    sgtId: String,
+    sgeName: String,
+    sgeValue: String,
+    sgeCode: String,
+}).getSchema();
