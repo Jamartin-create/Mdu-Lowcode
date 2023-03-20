@@ -24,6 +24,11 @@ export default [
                 name: 'sequare',
                 component: () => import('../pages/Home/ManaSequare.vue')
             },
+            {
+                path: 'comp',
+                name: 'comp',
+                component: () => import('../pages/Home/ManaComp.vue')
+            }
         ],
         redirect: '/home/user'
     },

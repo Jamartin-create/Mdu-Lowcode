@@ -5,7 +5,9 @@ export interface UserState {
 }
 
 export interface SysState {
-    toastVis: boolean;
+    snackVis: boolean;
+    snackText: string;
+    snackType: string;
 }
 
 export interface ItemState {

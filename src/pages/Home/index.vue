@@ -34,6 +34,12 @@
           @click="toSubPage('api')"
         ></v-list-item>
         <v-list-item
+          prepend-icon="mdi-puzzle"
+          title="物料管理"
+          value="comp"
+          @click="toSubPage('comp')"
+        ></v-list-item>
+        <v-list-item
           prepend-icon="mdi-account"
           title="我的项目"
           value="account"

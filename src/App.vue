@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { UserStore } from "./store/modules/user";
+import { SysStore } from "./store/modules/sys";
+import SnackBars from "./components/SnackBars.vue";
 import router from "./router";
 const userPinia = UserStore();
+const sysPinia = SysStore();
 if (!userPinia.checkIsLogin()) {
-  //TODO:消息提示组件
-  console.log("请登录");
+  sysPinia.snackOpen("请登录");
   router.push({ name: "login" });
 }
 </script>
 
 <template>
   <RouterView v-slot="{ Component }">
+    <SnackBars />
     <Transition name="page" mode="out-in">
       <component :is="Component"></component>
     </Transition>

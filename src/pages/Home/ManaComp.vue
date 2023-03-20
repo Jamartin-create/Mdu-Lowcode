@@ -1,5 +1,5 @@
 <template>
-  <div>组件管理</div>
+  <v-app class="container">物料管理</v-app>
 </template>
 
 <script setup lang="ts"></script>

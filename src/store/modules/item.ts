@@ -5,6 +5,7 @@ import piniaPersistConfig from '../piniaPersistConfig'
 import ItemApi from '../../api/item'
 import { ResType } from '../../utils/request'
 import { ItemType } from '../../api/item';
+import { SysStore } from './sys';
 
 
 export const ItemStore = defineStore({
@@ -16,9 +17,9 @@ export const ItemStore = defineStore({
     actions: {
         async saveCurItem(params: Partial<ItemType>) {
             try {
+                const sysPinia = SysStore();
                 if (this.curItem) {
-                    //TODO: 消息组件封装好后完善
-                    console.log('请勿重复保存');
+                    sysPinia.snackOpen('请勿重复保存');
                     return;
                 }
                 const { data: id, msg, code } = await ItemApi.saveItem(params);
