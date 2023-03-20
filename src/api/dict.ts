@@ -24,7 +24,7 @@ export default class DictApi {
         return Request.post(`${v1}/dict/type`, params);
     }
     //查询字典Type
-    static getDictType(params: Pick<DictType, 'sgtCode' | 'sgtId'>): PromiseRes {
+    static getDictType(params?: Pick<DictType, 'sgtCode' | 'sgtId'>): PromiseRes {
         return Request.get(`${v1}/dict/type`, params);
     }
     //新增字典Entry
@@ -36,7 +36,7 @@ export default class DictApi {
         return Request.post(`${v1}/dict/entry/saveBatch`, params);
     }
     //查询字典Entry
-    static getDictEntry(params: Pick<DictEntry, 'sgtId'>): PromiseRes {
-        return Request.get(`${v1}/dict/entry/`, params);
+    static getDictEntry(sgtId: string): PromiseRes {
+        return Request.get(`${v1}/dict/entry?sgtId=${sgtId}`);
     }
 }

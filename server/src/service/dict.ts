@@ -42,7 +42,7 @@ export default class DictService {
 
     //查询字典options
     static getDictEntry = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { sgtId, sgtCode } } = req;
+        const { query: { sgtId, sgtCode } } = req;
         if (!sgtId && !sgtCode) return next(ErrCode.PARAM_EXCEPTION);
         let tempId = sgtId;
         if (!tempId) {
