@@ -1,7 +1,14 @@
 <template>
-  <v-dialog v-model="visible" persistent width="800px">
+  <v-dialog v-model="vis" persistent width="800px">
     <v-card>
       <v-card-title>字典入口</v-card-title>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <dict-entry-save-dialog
+          :sgtId="sgt_id"
+          @on-save="getDataList(sgt_id)"
+        />
+      </v-card-actions>
       <v-card-text>
         <v-table :density="'comfortable'">
           <thead>
@@ -34,31 +41,33 @@
 import { ref, reactive } from "vue";
 import DictApi, { DictEntry } from "../../../api/dict";
 import { SysStore } from "../../../store/modules/sys";
+import DictEntrySaveDialog from "./DictEntrySaveDialog.vue";
+import { useDialogOpenClose } from "../../../hooks/useDialog";
 
-const visible = ref<boolean>(false);
+const { vis, open, close } = useDialogOpenClose();
+
 const dictEntryList = reactive<DictEntry[]>([]);
 
-function open(sgtId: string) {
-  visible.value = true;
+const sgt_id = ref<string>("");
+
+function openDia(sgtId: string) {
+  open();
+  sgt_id.value = sgtId;
   getDataList(sgtId);
 }
 
-function close() {
-  visible.value = false;
-}
-
 async function getDataList(sgtId: string) {
+  dictEntryList.splice(0, dictEntryList.length);
   const { msg, code, data } = await DictApi.getDictEntry(sgtId);
   if (code != 0) {
     SysStore().snackOpen(msg);
     return;
   }
-  dictEntryList.splice(0, dictEntryList.length);
   Array.prototype.push.apply(dictEntryList, data);
 }
 
 defineExpose({
-  open,
+  openDia,
 });
 </script>
 

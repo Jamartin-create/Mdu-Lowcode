@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-btn variant="tonal">新增</v-btn>
+      <v-card-actions>
+        <CompEditDialog />
+      </v-card-actions>
       <v-table density="comfortable">
         <thead>
           <tr>
@@ -38,6 +40,7 @@
 import CompApi from "../../../api/comp";
 import { onMounted, reactive } from "vue";
 import { SysStore } from "../../../store/modules/sys";
+import CompEditDialog from "./CompEditDialog.vue";
 
 const compList = reactive<any[]>([]);
 

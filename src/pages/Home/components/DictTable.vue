@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-btn variant="tonal">新增</v-btn>
+      <v-card-actions>
+        <DictSaveDialog @on-save="getList" />
+      </v-card-actions>
       <v-table density="comfortable">
         <thead>
           <tr>
@@ -21,7 +23,7 @@
             <td>
               <v-btn
                 variant="text"
-                @click="dictEntryTableDia?.open(dict.sgtId)"
+                @click="dictEntryTableDia?.openDia(dict.sgtId)"
               >
                 详情
               </v-btn>
@@ -41,6 +43,7 @@ import { onMounted, reactive, ref } from "vue";
 import { SysStore } from "../../../store/modules/sys";
 import DictApi, { DictType } from "../../../api/dict";
 import DictEntryTableDialog from "./DictEntryTableDialog.vue";
+import DictSaveDialog from "./DictSaveDialog.vue";
 const sysPinia = SysStore();
 
 const dictList = reactive<DictType[]>([]);
