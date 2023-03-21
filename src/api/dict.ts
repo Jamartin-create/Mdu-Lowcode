@@ -31,6 +31,10 @@ export default class DictApi {
         }
         return Request.get(`${v1}/dict/type${qs}`);
     }
+    //删除字典
+    static delDictType(sgtId: string): PromiseRes {
+        return Request.delete(`${v1}/dict/type?sgtId=${sgtId}`);
+    }
     //新增字典Entry
     static saveDictEntry(params: Partial<DictEntry>): PromiseRes {
         return Request.post(`${v1}/dict/entry`, params);

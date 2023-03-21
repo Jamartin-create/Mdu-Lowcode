@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :loading="btnLoading">
     <v-card-text>
       <v-card-actions>
         <DictSaveDialog @on-save="getList" />
@@ -27,7 +27,7 @@
               >
                 详情
               </v-btn>
-              <v-btn variant="text">删除</v-btn>
+              <v-btn variant="text" @click="delDict(dict.sgtId)">删除</v-btn>
               <v-btn variant="text">编辑</v-btn>
             </td>
           </tr>
@@ -44,7 +44,10 @@ import { SysStore } from "../../../store/modules/sys";
 import DictApi, { DictType } from "../../../api/dict";
 import DictEntryTableDialog from "./DictEntryTableDialog.vue";
 import DictSaveDialog from "./DictSaveDialog.vue";
+import { useDialogOpenClose } from "../../../hooks/useDialog";
 const sysPinia = SysStore();
+
+const { btnLoading, unLoading, loading } = useDialogOpenClose();
 
 const dictList = reactive<DictType[]>([]);
 
@@ -56,6 +59,23 @@ async function getList() {
   }
   dictList.splice(0, dictList.length);
   Array.prototype.push.apply(dictList, data);
+}
+
+async function delDict(id: string) {
+  loading();
+  try {
+    const { code, msg } = await DictApi.delDictType(id);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("成功");
+    getList();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    unLoading();
+  }
 }
 
 const dictEntryTableDia = ref<InstanceType<typeof DictEntryTableDialog>>();

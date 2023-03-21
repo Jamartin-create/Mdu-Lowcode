@@ -5,7 +5,8 @@ const routes = Router();
 
 routes.route('/dict/type')
     .get(DictService.getDictType)
-    .post(DictService.saveDictType);
+    .post(DictService.saveDictType)
+    .delete(DictService.delDict);
 
 routes.route('/dict/entry')
     .get(DictService.getDictEntry)

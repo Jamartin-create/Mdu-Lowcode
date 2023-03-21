@@ -1,4 +1,3 @@
-import { number } from 'echarts';
 import { ref } from 'vue';
 
 export function useDialogOpenClose() {

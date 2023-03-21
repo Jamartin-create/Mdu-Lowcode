@@ -26,4 +26,13 @@ export class Request {
             })
         })
     }
+    static delete = (url: string, params?: any): Promise<ResType> => {
+        return new Promise((reso, reje) => {
+            axios.delete(url, params).then(res => {
+                reso(res.data);
+            }).catch(err => {
+                reje(err);
+            })
+        })
+    }
 }
