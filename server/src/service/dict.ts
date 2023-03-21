@@ -13,15 +13,15 @@ export default class DictService {
 
     //查询字典
     static getDictType = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { sgtCode, sgtId } } = req;
+        const { query: { sgtCode, sgtId } } = req;
         if (!sgtCode && !sgtId) {
             const ret = await sgtModel.find();
             res.send({ code: 0, msg: 'success', data: ret });
             return;
         }
         const options: { sgtCode?: string, sgtId?: string } = {};
-        !!sgtCode && (options.sgtCode = sgtCode);
-        !!sgtId && (options.sgtId == sgtId);
+        !!sgtCode && (options.sgtCode = sgtCode as string);
+        !!sgtId && (options.sgtId = sgtId as string);
         const ret = await sgtModel.find(options);
         res.send({ code: 0, msg: 'success', data: ret });
     }
@@ -49,7 +49,7 @@ export default class DictService {
             const [sgt] = await sgtModel.find({ sgtCode });
             tempId = sgt.sgtId;
         }
-        const ret = await sgeModel.find({ sgtId });
+        const ret = await sgeModel.find({ sgtId: tempId });
         res.send({ code: 0, msg: 'success', data: ret });
     }
 

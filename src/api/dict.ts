@@ -25,7 +25,11 @@ export default class DictApi {
     }
     //查询字典Type
     static getDictType(params?: Pick<DictType, 'sgtCode' | 'sgtId'>): PromiseRes {
-        return Request.get(`${v1}/dict/type`, params);
+        let qs = '';
+        if (params) {
+            qs += '?' + (params.sgtCode ? `sgtCode=${params.sgtCode}` : '') + (params.sgtId ? `sgtId=${params.sgtId}` : '')
+        }
+        return Request.get(`${v1}/dict/type${qs}`);
     }
     //新增字典Entry
     static saveDictEntry(params: Partial<DictEntry>): PromiseRes {
@@ -35,8 +39,12 @@ export default class DictApi {
     static saveBatchDictEntry(params: Array<Partial<DictEntry>>): PromiseRes {
         return Request.post(`${v1}/dict/entry/saveBatch`, params);
     }
-    //查询字典Entry
+    //根据字典Type的ID查询字典Entry
     static getDictEntry(sgtId: string): PromiseRes {
         return Request.get(`${v1}/dict/entry?sgtId=${sgtId}`);
+    }
+    //根据字典Type的Code查询字典Entry
+    static getDictEntryByCode(sgtCode: string): PromiseRes {
+        return Request.get(`${v1}/dict/entry?sgtCode=${sgtCode}`);
     }
 }

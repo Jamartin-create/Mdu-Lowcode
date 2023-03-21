@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <v-card-actions>
-        <CompEditDialog />
+        <CompEditDialog @on-save="getDataList" />
       </v-card-actions>
       <v-table density="comfortable">
         <thead>

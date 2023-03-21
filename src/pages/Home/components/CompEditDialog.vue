@@ -16,7 +16,9 @@
         <v-toolbar-title>新增物料</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn variant="text" @click="save"> 保存 </v-btn>
+          <v-btn :loading="btnLoading" variant="text" @click="save">
+            保存
+          </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <v-container>
@@ -25,23 +27,31 @@
             <v-card variant="flat">
               <v-card-title>物料信息配置</v-card-title>
               <v-card-text>
-                <v-radio-group inline>
-                  <v-radio label="交互" value="base"></v-radio>
-                  <v-radio label="表单" value="form"></v-radio>
-                  <v-radio label="可视化" value="visual"></v-radio>
-                </v-radio-group>
+                <v-container>
+                  <v-select
+                    v-model="formParams.compType"
+                    label="物料类型"
+                    :items="dictEntryList"
+                    item-title="sgeName"
+                    item-value="sgeValue"
+                    variant="underlined"
+                    density="comfortable"
+                  ></v-select>
+                  <v-text-field
+                    v-model="formParams.compName"
+                    label="物料名称"
+                    variant="underlined"
+                    density="comfortable"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="formParams.compTitle"
+                    label="物料标题"
+                    variant="underlined"
+                    density="comfortable"
+                  ></v-text-field>
+                </v-container>
               </v-card-text>
             </v-card>
-            <!-- <v-tabs v-model="tab">
-                <v-tab value="base">交互</v-tab>
-                <v-tab value="form">表单</v-tab>
-                <v-tab value="visual">可视化</v-tab>
-              </v-tabs>
-              <v-window v-model="tab">
-                <v-window-item value="base">交互</v-window-item>
-                <v-window-item value="form">表单</v-window-item>
-                <v-window-item value="visual">可视化</v-window-item>
-              </v-window> -->
           </v-col>
           <v-col cols="6">
             <v-list lines="two" subheader>
@@ -55,14 +65,46 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { useDialogOpenClose } from "../../../hooks/useDialog";
-import { ref } from "vue";
-const { vis, close } = useDialogOpenClose();
+import { useDialogOpenClose, useFormBase } from "../../../hooks/useDialog";
+import { reactive, ref } from "vue";
+import { useDict } from "../../../hooks/useDict";
+import { CompType } from "../../../api/comp";
+import { SysStore } from "../../../store/modules/sys";
+import CompApi from "../../../api/comp";
 
-const tab = ref<string>("base");
+const emits = defineEmits(["on-save"]);
+const { dictEntryList, getDictEntryByCode } = useDict();
+getDictEntryByCode("COMP_TYPE");
 
-function save() {
-  close();
+const formParams = reactive<Partial<CompType>>({
+  compName: null,
+  compTitle: null,
+  compType: null,
+  dataSourceId: null,
+  compProps: [],
+  compStyles: [],
+});
+
+const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
+const { reset } = useFormBase();
+
+async function save() {
+  loading();
+  try {
+    const { code, msg } = await CompApi.saveComp(formParams);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("成功");
+    reset(formParams);
+    emits("on-save");
+    close();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    unLoading();
+  }
 }
 </script>
 

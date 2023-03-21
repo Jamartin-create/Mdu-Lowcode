@@ -1,3 +1,4 @@
+import { number } from 'echarts';
 import { ref } from 'vue';
 
 export function useDialogOpenClose() {
@@ -18,5 +19,21 @@ export function useDialogOpenClose() {
         unLoading: function () {
             btnLoading.value = false;
         }
+    }
+}
+
+
+export function useFormBase() {
+    function reset(formParams: any) {
+        Object.keys(formParams).forEach((keys, id) => {
+            if (Array.isArray(formParams[keys])) {
+                formParams[keys].splice(0, formParams[keys].length);
+            } else {
+                formParams[keys] = null;
+            }
+        })
+    }
+    return {
+        reset
     }
 }
