@@ -55,6 +55,7 @@
                     label="数据源Id"
                     variant="underlined"
                     density="comfortable"
+                    @click="dsChoseDia?.open()"
                   ></v-text-field>
                 </v-container>
               </v-card-text>
@@ -78,6 +79,7 @@
         </v-row>
       </v-container>
     </v-card>
+    <DatasourceChoseDialog ref="dsChoseDia" @on-chose="choseDataSource" />
   </v-dialog>
 </template>
 <script setup lang="ts">
@@ -88,11 +90,13 @@ import { useDict } from "../../../hooks/useDict";
 import { CompType } from "../../../api/comp";
 import { SysStore } from "../../../store/modules/sys";
 import CompApi from "../../../api/comp";
+import DatasourceChoseDialog from "./DatasourceChoseDialog.vue";
 
 const emits = defineEmits(["on-save"]);
 const { dictEntryList, getDictEntryByCode } = useDict();
 getDictEntryByCode("COMP_TYPE");
 
+const dsChoseDia = ref<InstanceType<typeof DatasourceChoseDialog>>();
 const propsList = ref<InstanceType<typeof OptionsListForm>>();
 const stylesList = ref<InstanceType<typeof OptionsListForm>>();
 
@@ -129,6 +133,10 @@ async function save() {
   } finally {
     unLoading();
   }
+}
+
+function choseDataSource(id: string) {
+  formParams.dataSourceId = id;
 }
 </script>
 

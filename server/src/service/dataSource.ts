@@ -9,6 +9,12 @@ import { guid } from '../utils/strHandler';
 const dsModel = useModel("dataSource", DataSourceSchema);
 
 export default class DataSourceService {
+    //获取
+    static getList = async (req: Request, res: Response, next: NextFunction) => {
+        const ds = await dsModel.find();
+        res.send({ code: 0, msg: 'success', data: ds });
+    }
+
     //新增
     static saveDS = async (req: Request, res: Response, next: NextFunction) => {
         const { body: { dsTitle, dsColumns, dsNumbers, dsStaticDatas, dsApiPath, dsPath } } = req;
