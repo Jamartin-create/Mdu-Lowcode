@@ -23,9 +23,9 @@
       </v-toolbar>
       <v-container>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="3">
             <v-card variant="flat">
-              <v-card-title>物料信息配置</v-card-title>
+              <v-card-title>物料基础信息配置</v-card-title>
               <v-card-text>
                 <v-container>
                   <v-select
@@ -49,15 +49,31 @@
                     variant="underlined"
                     density="comfortable"
                   ></v-text-field>
+                  <v-text-field
+                    :disabled="formParams.compType != 'visual'"
+                    v-model="formParams.dataSourceId"
+                    label="数据源Id"
+                    variant="underlined"
+                    density="comfortable"
+                  ></v-text-field>
                 </v-container>
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col cols="6">
-            <v-list lines="two" subheader>
-              <v-list-subheader>物料信息配置</v-list-subheader>
-            </v-list>
+          <v-col cols="9">
             <v-divider></v-divider>
+            <v-tabs v-model="tab">
+              <v-tab value="props">Props</v-tab>
+              <v-tab value="styles">Styles</v-tab>
+            </v-tabs>
+            <v-window v-model="tab">
+              <v-window-item value="props">
+                <OptionsListForm ref="propsList" />
+              </v-window-item>
+              <v-window-item value="styles">
+                <OptionsListForm ref="stylesList" />
+              </v-window-item>
+            </v-window>
           </v-col>
         </v-row>
       </v-container>
@@ -65,6 +81,7 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
+import OptionsListForm from "./OptionsListForm.vue";
 import { useDialogOpenClose, useFormBase } from "../../../hooks/useDialog";
 import { reactive, ref } from "vue";
 import { useDict } from "../../../hooks/useDict";
@@ -75,6 +92,9 @@ import CompApi from "../../../api/comp";
 const emits = defineEmits(["on-save"]);
 const { dictEntryList, getDictEntryByCode } = useDict();
 getDictEntryByCode("COMP_TYPE");
+
+const propsList = ref<InstanceType<typeof OptionsListForm>>();
+const stylesList = ref<InstanceType<typeof OptionsListForm>>();
 
 const formParams = reactive<Partial<CompType>>({
   compName: null,
@@ -88,9 +108,13 @@ const formParams = reactive<Partial<CompType>>({
 const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
 const { reset } = useFormBase();
 
+const tab = ref<string>("props");
+
 async function save() {
   loading();
   try {
+    formParams.compProps = propsList.value?.formList;
+    formParams.compStyles = stylesList.value?.formList;
     const { code, msg } = await CompApi.saveComp(formParams);
     if (code != 0) {
       SysStore().snackOpen(msg);

@@ -36,3 +36,17 @@ export function useFormBase() {
         reset
     }
 }
+
+export interface WindowTabTypes {
+    label: string;
+    compName: string;
+}
+
+export function useWindowTab(arr: WindowTabTypes[]) {
+    const tab = ref<string>(arr[0].label);
+    return {
+        tab,
+        tabs: arr.slice(),
+    }
+
+}
