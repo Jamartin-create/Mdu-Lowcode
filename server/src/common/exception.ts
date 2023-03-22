@@ -40,7 +40,8 @@ export const ErrCode = {
     ITEM_NOT_FOUND_EXCEPTION: generatorError({ code: 90010, msg: '未找到项目' }),
     DATASOURCE_NOT_FOUND_EXCEPTION: generatorError({ code: 90011, msg: '未找到数据源' }),
     DICT_CODE_CONFILICT_EXCEPTION: generatorError({ code: 90012, msg: '字典CODE冲突' }),
-    DICT_TYPE_NOT_FOUND_EXCEPTION: generatorError({ code: 90013, msg: '未找到字典Type' })
+    DICT_TYPE_NOT_FOUND_EXCEPTION: generatorError({ code: 90013, msg: '未找到字典Type' }),
+    COMP_NOT_FOUND_EXCEPTION: generatorError({ code: 90014, msg: '未找到物料' }),
 }
 
 //请求异常捕获（链式调用结尾）
