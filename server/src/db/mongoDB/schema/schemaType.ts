@@ -25,26 +25,33 @@ export interface Item extends BusinessBaseEntity {
     groupId: string;
 }
 
+export interface SelectGroupType extends BusinessBaseEntity {
+    sgtId: string;
+    sgtName: string;
+    sgtCode: string;
+}
+
 export type Test = {
     name: string;
     age: number;
     gender: string;
 }
 
+export interface CompType {
+    compId: string,
+    compName: string,
+    compTitle: string,
+    compType: string,
+    compProps: CompProp[],
+    compStyles: CompProp[],
+    dataSourceId: string,
+}
 
 //selectGroup，需配置字典（后端配置），这里放置字典ID
 export interface CompProp {
     id: Number,
     name: String,
     text: String,
-    type: 'text' | 'select',
-    selectGroup: String,
-}
-
-export interface CompStyle {
-    id: Number,
-    name: String,
-    text: String,
-    type: 'text' | 'color' | 'select',
+    type: string,
     selectGroup: String,
 }

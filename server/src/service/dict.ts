@@ -6,6 +6,7 @@ import { guid } from '../utils/strHandler';
 import { initSchemaInfo } from '../utils/dataFilled';
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
+import { SelectGroupType } from '../db/mongoDB/schema/schemaType';
 
 const SgtModel = useModel('selectGroupType', SgtSchema);
 const SgeModel = useModel('selectGroupEntry', SgeSchema);
@@ -109,5 +110,22 @@ export default class DictService {
             })
         })
         SgeModel.insertMany(dicts).then(v => res.send({ code: 0, msg: 'success' })).catch(err => next(ErrCode.SELECT_MG_EXCEPTION));
+    }
+}
+
+export async function getDictTypeByCode(code: string) {
+    try {
+        const res = await SgtModel.findOne({ sgtCode: code });
+        return res;
+    } catch (e) {
+        console.error(e);
+    }
+}
+export async function getDictTypeById(id: string) {
+    try {
+        const res = await SgtModel.findOne({ sgtId: id });
+        return res;
+    } catch (e) {
+        console.error(e);
     }
 }

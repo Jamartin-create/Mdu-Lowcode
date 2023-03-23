@@ -6,6 +6,8 @@ import { guid } from '../utils/strHandler';
 import { initSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
+import Engine from '../plugin/lowcode-engine/index'
+import { CompProp } from '../db/mongoDB/schema/schemaType';
 
 const compModel = useModel('comp', CompSchema);
 
@@ -13,7 +15,8 @@ export default class ComponentService {
     //获取所有物料
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const ret = await compModel.find();
+            const comps = await compModel.find();
+            const ret = Engine.translateSchema(comps);
             res.send({ code: 0, msg: 'success', data: ret });
         } catch (e) {
             console.error(e);

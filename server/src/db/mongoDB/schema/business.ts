@@ -1,5 +1,5 @@
 import { MySchema } from './baseSchema';
-import { CompProp, CompStyle } from './schemaType';
+import { CompProp } from './schemaType';
 
 /**
  * 测试Schema
@@ -54,7 +54,7 @@ export const CompSchema = new MySchema({
     compTitle: String,
     compType: String,
     compProps: Array<CompProp>,
-    compStyles: Array<CompStyle>,
+    compStyles: Array<CompProp>,
     dataSourceId: String,
 }).getSchema();
 
