@@ -28,16 +28,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { guid } from "../../utils/common";
 import draggable from "vuedraggable";
+import CompApi from "../../api/comp";
+
+async function getCompList() {
+  try {
+    const { code, msg, data } = await CompApi.getCompList();
+    console.log(data);
+    componentList.splice(0, componentList.length);
+    Array.prototype.push.apply(componentList, data);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 //tab控制
 const tab = ref<"c" | "m">("c");
 
-//拖拽组件控制
-const componentList = ref<any[]>([
-  {
+/*
+测试数据
+{
     id: 1,
     tag: "v-btn",
     tagCN: "按钮",
@@ -61,7 +73,11 @@ const componentList = ref<any[]>([
     tagCN: "测试Echarts",
     props: {},
   },
-]);
+*/
+
+//拖拽组件控制
+const componentList = reactive<any[]>([]);
+
 function onClone(data: any) {
   let nD = JSON.parse(JSON.stringify(data));
   console.log(nD);
@@ -75,6 +91,8 @@ defineExpose({
   open: () => (drawer.value = true),
   close: () => (drawer.value = false),
 });
+
+getCompList();
 </script>
 
 <style scoped lang="scss">

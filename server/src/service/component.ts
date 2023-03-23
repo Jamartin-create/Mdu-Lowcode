@@ -6,8 +6,7 @@ import { guid } from '../utils/strHandler';
 import { initSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
-import Engine from '../plugin/lowcode-engine/index'
-import { CompProp } from '../db/mongoDB/schema/schemaType';
+import Engine from '../plugin/lowcode-engine/index';
 
 const compModel = useModel('comp', CompSchema);
 
@@ -21,6 +20,24 @@ export default class ComponentService {
         } catch (e) {
             console.error(e);
             next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
+
+    //根据id获取物料Props
+    static getCompProps = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { query: { compId } } = req;
+            if (!compId) return next(ErrCode.PARAM_EXCEPTION);
+            const comp = await compModel.findOne({ compId });
+            if (!comp) return next(ErrCode.COMP_NOT_FOUND_EXCEPTION);
+            res.send({
+                code: 0, msg: 'success', data: {
+                    props: comp.compProps,
+                    styles: comp.compStyles
+                }
+            });
+        } catch (e) {
+
         }
     }
 

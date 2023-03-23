@@ -9,6 +9,9 @@
       <v-window-item value="s">样式</v-window-item>
       <v-window-item value="a">
         <v-container>
+          <!-- <InputField :list="propsList" :model-value="info.props" /> -->
+        </v-container>
+        <!-- <v-container>
           <v-text-field
             :disabled="info.props.text == null"
             v-model="info.props.text"
@@ -34,7 +37,7 @@
           >
             <template v-slot:prepend> 副题 </template>
           </v-text-field>
-        </v-container>
+        </v-container> -->
       </v-window-item>
       <v-window-item value="d">数据</v-window-item>
     </v-window>
@@ -43,11 +46,42 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-const info = reactive<any>({
-  props: {},
-});
-function catchCom({ props }: any) {
+import CompApi from "../../api/comp";
+import { replaceArray } from "../../utils/common";
+// import InputField from "./components/InputField";
+
+type Element = {
+  id: string;
+  compId: string;
+  tag: string;
+  tagCN: string;
+  type: string;
+  props: any;
+  styles: any;
+  dataSourceId: string;
+};
+
+//获取基本信息
+const info = reactive<Partial<Element>>({});
+function catchCom({ compId, props, styles }: Partial<Element>) {
+  console.log(compId);
+  info.compId = compId;
   info.props = props;
+  info.styles = styles;
+  getProps(compId!);
+}
+
+//获取物料的props和styles
+const propsList = reactive<any[]>([]);
+const stylesList = reactive<any[]>([]);
+async function getProps(id: string) {
+  try {
+    const { code, msg, data } = await CompApi.getCompProps(id);
+    replaceArray(propsList, data.props);
+    replaceArray(stylesList, data.styles);
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 //tab切换

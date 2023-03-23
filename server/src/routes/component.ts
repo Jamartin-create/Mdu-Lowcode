@@ -8,4 +8,7 @@ routes.route('/comp')
     .post(ComponentService.saveOne)
     .delete(ComponentService.delOne);
 
+routes.route('/comp/options')
+    .get(ComponentService.getCompProps);
+
 export default routes;

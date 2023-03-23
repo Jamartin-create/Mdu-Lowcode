@@ -18,6 +18,10 @@ export default class CompApi {
     static getCompList(): PromiseRes {
         return Request.get(`${v1}/comp/list`);
     }
+    //查询物料配置项
+    static getCompProps(id: string): PromiseRes {
+        return Request.get(`${v1}/comp/options?compId=${id}`);
+    }
     //新增物料
     static saveComp(params: Partial<CompType>): PromiseRes {
         return Request.post(`${v1}/comp/`, params)
