@@ -9,35 +9,8 @@
       <v-window-item value="s">样式</v-window-item>
       <v-window-item value="a">
         <v-container>
-          <!-- <InputField :list="propsList" :model-value="info.props" /> -->
+          <InputField :list="propsList" :vModel="info" />
         </v-container>
-        <!-- <v-container>
-          <v-text-field
-            :disabled="info.props.text == null"
-            v-model="info.props.text"
-            required
-          >
-            <template v-slot:prepend width="100px"> 内容 </template>
-          </v-text-field>
-        </v-container>
-        <v-container>
-          <v-text-field
-            :disabled="info.props.title == null"
-            v-model="info.props.title"
-            required
-          >
-            <template v-slot:prepend> 标题 </template>
-          </v-text-field>
-        </v-container>
-        <v-container>
-          <v-text-field
-            :disabled="info.props.subtitle == null"
-            v-model="info.props.subtitle"
-            required
-          >
-            <template v-slot:prepend> 副题 </template>
-          </v-text-field>
-        </v-container> -->
       </v-window-item>
       <v-window-item value="d">数据</v-window-item>
     </v-window>
@@ -48,7 +21,7 @@
 import { ref, reactive } from "vue";
 import CompApi from "../../api/comp";
 import { replaceArray } from "../../utils/common";
-// import InputField from "./components/InputField";
+import InputField from "./components/InputField.vue";
 
 type Element = {
   id: string;
@@ -64,11 +37,11 @@ type Element = {
 //获取基本信息
 const info = reactive<Partial<Element>>({});
 function catchCom({ compId, props, styles }: Partial<Element>) {
-  console.log(compId);
   info.compId = compId;
   info.props = props;
   info.styles = styles;
   getProps(compId!);
+  console.log(info);
 }
 
 //获取物料的props和styles

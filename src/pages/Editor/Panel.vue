@@ -45,6 +45,7 @@ const componentList = ref<any[]>([]);
 //组件选中操作
 const active = ref<string>("");
 function selectCom(el: any) {
+  if (active.value == el.id) return;
   active.value = el.id;
   emits("select", el);
 }
