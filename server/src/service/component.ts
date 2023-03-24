@@ -10,13 +10,27 @@ import Engine from '../plugin/lowcode-engine/index';
 
 const compModel = useModel('comp', CompSchema);
 
+async function getAllList() {
+    return await compModel.find();
+}
+
 export default class ComponentService {
     //获取所有物料
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const comps = await compModel.find();
+            const comps = await getAllList();
             const ret = Engine.translateSchema(comps);
             res.send({ code: 0, msg: 'success', data: ret });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
+    //获取物料列表
+    static getTable = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const comps = await getAllList();
+            res.send({ code: 0, msg: 'success', data: comps });
         } catch (e) {
             console.error(e);
             next(ErrCode.SELECT_MG_EXCEPTION);

@@ -5,6 +5,7 @@ const routes = Router();
 
 routes.get('/comp/list', ComponentService.getList);
 routes.route('/comp')
+    .get(ComponentService.getTable)
     .post(ComponentService.saveOne)
     .delete(ComponentService.delOne);
 

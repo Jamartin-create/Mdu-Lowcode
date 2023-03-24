@@ -117,8 +117,8 @@ const tab = ref<string>("props");
 async function save() {
   loading();
   try {
-    formParams.compProps = propsList.value?.formList;
-    formParams.compStyles = stylesList.value?.formList;
+    formParams.compProps = propsList.value?.formList || [];
+    formParams.compStyles = stylesList.value?.formList || [];
     const { code, msg } = await CompApi.saveComp(formParams);
     if (code != 0) {
       SysStore().snackOpen(msg);

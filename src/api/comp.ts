@@ -14,7 +14,11 @@ export interface CompType {
 }
 
 export default class CompApi {
-    //查询物料列表
+    //查询物料列表（物料管理界面调用）
+    static getCompTable(): PromiseRes {
+        return Request.get(`${v1}/comp/`)
+    }
+    //查询物料列表（项目初始化时调用）
     static getCompList(): PromiseRes {
         return Request.get(`${v1}/comp/list`);
     }

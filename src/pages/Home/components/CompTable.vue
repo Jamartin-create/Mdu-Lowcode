@@ -47,7 +47,7 @@ import CompApi, { CompType } from "../../../api/comp";
 const compList = reactive<CompType[]>([]);
 
 async function getDataList() {
-  const { code, msg, data } = await CompApi.getCompList();
+  const { code, msg, data } = await CompApi.getCompTable();
   if (code != 0) {
     SysStore().snackOpen(msg);
     return;
