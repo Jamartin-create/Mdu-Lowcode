@@ -41,7 +41,6 @@ function catchCom({ compId, props, styles }: Partial<Element>) {
   info.props = props;
   info.styles = styles;
   getProps(compId!);
-  console.log(info);
 }
 
 //获取物料的props和styles

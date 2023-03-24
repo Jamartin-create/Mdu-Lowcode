@@ -23,7 +23,6 @@ const open = () => (visible.value = true);
 const close = () => (visible.value = false);
 
 function confirm() {
-  console.log("ddd");
   emits("confirm");
   close();
 }

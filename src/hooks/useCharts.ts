@@ -25,7 +25,7 @@ export function useCharts(chartEL: Ref<ElRef | undefined | null>) {
         try {
             chart?.setOption(option);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
     return { updateEchart }

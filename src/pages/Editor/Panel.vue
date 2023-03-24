@@ -61,7 +61,6 @@ function deleteCancel() {
   delItem.value = "";
 }
 function deleteItem() {
-  console.log("ddd");
   for (let i = 0; i < componentList.value.length; i++) {
     if (componentList.value[i].id == delItem.value) {
       componentList.value.splice(i, 1);

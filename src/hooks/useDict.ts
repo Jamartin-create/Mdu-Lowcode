@@ -8,7 +8,6 @@ export function useDict() {
     const dictEntryList = reactive<Partial<DictEntry>[]>([]);
 
     async function getEntry(type: string, key: string) {
-        console.log(type, key);
         const { code, msg, data } = type == 'id' ? await DictApi.getDictEntry(key) : await DictApi.getDictEntryByCode(key);
         if (code != 0) {
             console.error(msg);

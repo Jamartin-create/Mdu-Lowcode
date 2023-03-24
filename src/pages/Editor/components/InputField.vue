@@ -20,10 +20,8 @@ const { list, vModel } = defineProps<{
   vModel: any;
 }>();
 
-console.log(list, vModel.props);
 const formList = reactive<any[]>([]);
 function updateList() {
-  console.log(list, vModel.props);
   replaceArray(
     formList,
     list.map((item) => {

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ItemState } from '../interface';
-import router from '../../router'
 import piniaPersistConfig from '../piniaPersistConfig'
 import ItemApi from '../../api/item'
 import { ResType } from '../../utils/request'
@@ -23,13 +22,20 @@ export const ItemStore = defineStore({
                     return;
                 }
                 const { data: id, msg, code } = await ItemApi.saveItem(params);
-                console.log(id)
-                if (code == 0) {
-                    const { data: item, msg, code } = await ItemApi.getItemById(id)
+                const snO = SysStore().snackOpen;
+                if (code != 0) {
+                    snO(msg);
+                    return;
+                }
+                {
+                    const { data: item, msg, code } = await ItemApi.getItemById(id);
+                    if (code != 0) {
+                        snO(msg);
+                        return;
+                    }
                     this.curItem = item;
                     return;
                 }
-                console.error(msg);
             } catch (e) {
                 console.error(e);
             }

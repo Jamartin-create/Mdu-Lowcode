@@ -50,7 +50,6 @@ function toEditor(param: any) {
     name: "editor",
   };
   if (param != null) params.params = param;
-  console.log(params);
   router.push(params);
 }
 

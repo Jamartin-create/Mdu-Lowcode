@@ -32,11 +32,15 @@ import { ref, reactive } from "vue";
 import { guid } from "../../utils/common";
 import draggable from "vuedraggable";
 import CompApi from "../../api/comp";
+import { SysStore } from "../../store/modules/sys";
 
 async function getCompList() {
   try {
     const { code, msg, data } = await CompApi.getCompList();
-    console.log(data);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
     componentList.splice(0, componentList.length);
     Array.prototype.push.apply(componentList, data);
   } catch (e) {
@@ -80,7 +84,6 @@ const componentList = reactive<any[]>([]);
 
 function onClone(data: any) {
   let nD = JSON.parse(JSON.stringify(data));
-  console.log(nD);
   nD.id = guid();
   return nD;
 }
