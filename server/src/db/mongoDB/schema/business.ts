@@ -42,7 +42,7 @@ export const ItemSchema = new MySchema({
 export const GroupSchema = new MySchema({
     groupId: String,
     groupTitle: String,
-    groupJson: String
+    groupJson: Array<Object>
 }).getSchema();
 
 /**

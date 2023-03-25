@@ -50,18 +50,18 @@ export default class ItemService {
 
     //新增
     static saveItem = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { itemTitle, itemDescription } } = req;
+        const { body: { itemTitle, itemDescription, groupId } } = req;
         if (!itemTitle) return next(ErrCode.PARAM_EXCEPTION);
         const user = getUserInfo(req);
-        const entity = new ItemModel({
+        const itemOptions = {
             itemTitle: itemTitle,
             itemDescription: itemDescription || '',
-            ...fillItemInfo(user.userId, '暂空'),
-        });
-        exceptionOnSave(entity, res, next, (options: any) => {
+            ...fillItemInfo(user.userId, groupId),
+        }
+        exceptionOnSave(new ItemModel(itemOptions), res, next, (options: any) => {
             res.send({
                 ...options,
-                data: entity.itemId
+                data: itemOptions
             })
         });
     }

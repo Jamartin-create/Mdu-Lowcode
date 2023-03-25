@@ -14,12 +14,15 @@ export default class GroupService {
         const { body: { groupTitle, groupJson } } = req;
         if (!groupTitle || !groupJson) return next(ErrCode.PARAM_EXCEPTION);
         const user = getUserInfo(req);
-        exceptionOnSave(new groupModel({
+        const groupOption = {
             groupTitle,
             groupJson,
             groupId: guid(),
             ...initSchemaInfo(user.userId)
-        }), res, next);
+        }
+        exceptionOnSave(new groupModel(groupOption), res, next, (options: any) => {
+            res.send({ ...options, data: groupOption });
+        });
     }
     //编辑组件组
     static editOne = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,8 +38,8 @@ export default class GroupService {
         const user = getUserInfo(req);
         try {
             await groupModel.updateOne({ groupId }, {
-                groupTitle,
-                groupJson,
+                groupTitle: groupTitle || group.groupTitle,
+                groupJson: groupJson || group.groupJson,
                 ...updateSchemaInfo(user.userId)
             });
             res.send({ code: 0, msg: 'success' });
