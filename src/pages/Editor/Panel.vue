@@ -40,8 +40,24 @@
 import Dialog from "../../components/DialogComponents/Dialog.vue";
 import draggable from "vuedraggable";
 import { ref } from "vue";
+import { watch } from "vue";
+import { GroupType } from "../../api/group";
+import { guid } from "../../../server/src/utils/strHandler";
+import { ItemStore } from "../../store/modules/item";
 const emits = defineEmits(["select"]);
+const itemPinia = ItemStore();
+
+//画板中的组件列表
 const componentList = ref<any[]>([]);
+watch(
+  () => componentList,
+  (n) => {
+    console.log(n.value);
+    itemPinia.saveGroup(n.value);
+  },
+  { deep: true, immediate: true }
+);
+
 //组件选中操作
 const active = ref<string>("");
 function selectCom(el: any) {
@@ -68,6 +84,15 @@ function deleteItem() {
     }
   }
 }
+
+defineExpose({
+  getGroupOption(): Partial<GroupType> {
+    return {
+      groupJson: componentList.value,
+      groupTitle: guid(),
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -5,7 +5,6 @@ import Panel from "./Panel.vue";
 import LeftSideBar from "./LeftSideBar.vue";
 import RightSiderBar from "./RightSiderBar.vue";
 import DiaSaveItem from "./components/DiaSaveItem.vue";
-import ItemApi from "../../api/item";
 import { ItemType } from "../../api/item";
 import { ItemStore } from "../../store/modules/item";
 
@@ -13,6 +12,7 @@ const router = useRouter();
 const itemPinia = ItemStore();
 
 const DiaOnSave = ref<InstanceType<typeof DiaSaveItem>>();
+const panel = ref<InstanceType<typeof Panel>>();
 
 //左右Sider开合
 const LeftSider = ref<InstanceType<typeof LeftSideBar>>();
@@ -36,8 +36,13 @@ function onSelect(el: any) {
 
 //保存项目
 async function saveItem(params: ItemType) {
-  //TODO: 组件组合数据拼接（涉及到引擎开发）
   itemPinia.saveCurItem(params);
+}
+
+//返回主页
+function backHome() {
+  itemPinia.reset();
+  router.push({ name: "home" });
 }
 </script>
 
@@ -55,17 +60,13 @@ async function saveItem(params: ItemType) {
         variant="text"
         @click="DiaOnSave?.open()"
       ></v-btn>
-      <v-btn
-        variant="text"
-        icon="mdi-close"
-        @click="router.push({ name: 'home' })"
-      ></v-btn>
+      <v-btn variant="text" icon="mdi-close" @click="backHome"></v-btn>
     </v-app-bar>
     <LeftSideBar ref="LeftSider" />
     <RightSiderBar ref="RightSider" />
     <v-main>
       <div class="wrapper">
-        <Panel @select="onSelect" />
+        <Panel ref="panel" @select="onSelect" />
       </div>
     </v-main>
     <DiaSaveItem ref="DiaOnSave" @save="saveItem" />
