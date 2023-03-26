@@ -6,6 +6,7 @@ import { getUserInfo } from '../utils/auth';
 import { Item } from '../db/mongoDB/schema/schemaType';
 import { guid } from '../utils/strHandler';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
+import { getGROUP_BYID } from "./group";
 
 const ItemModel = useModel('item', ItemSchema);
 
@@ -38,10 +39,11 @@ export default class ItemService {
     static getById = async (req: Request, res: Response, next: NextFunction) => {
         const { params: { itemId } } = req;
         try {
-            const [item] = await ItemModel.find({ "itemId": itemId });
-            console.log(item);
+            const item = await ItemModel.findOne({ "itemId": itemId });
             if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
-            res.send({ code: 0, msg: 'success', data: item });
+            const group = await getGROUP_BYID(item.groupId);
+            if (!group) return next(ErrCode.GROUP_NOT_FOUD_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: { item, group } });
         } catch (e) {
             console.error(e);
             next(ErrCode.EXCEUTE_EXCEPTION);

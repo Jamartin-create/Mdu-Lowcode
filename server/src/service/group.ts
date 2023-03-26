@@ -8,7 +8,28 @@ import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 
 const groupModel = useModel('group', GroupSchema);
 
+export async function getGROUP_BYID(id: string) {
+    try {
+        const group = await groupModel.findOne({ groupId: id });
+        return group;
+    } catch (e) {
+        throw e;
+    }
+}
+
 export default class GroupService {
+    //根据id获取组件组
+    static getGroupById = async (req: Request, res: Response, next: NextFunction) => {
+        const { query: { groupId } } = req;
+        if (!groupId) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const data = await getGROUP_BYID(groupId as string);
+            res.send({ code: 0, msg: 'success', data });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.EXCEUTE_EXCEPTION);
+        }
+    }
     //保存组件组
     static saveOne = (req: Request, res: Response, next: NextFunction) => {
         const { body: { groupTitle, groupJson } } = req;
