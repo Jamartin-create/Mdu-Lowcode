@@ -15,6 +15,10 @@ export interface GroupType {
 }
 
 export default class GroupApi {
+    //查询物料
+    static getGroup(groupId: string): PromiseRes {
+        return Request.get(`${v1}/group/${groupId}`);
+    }
     //保存物料组
     static saveGroup(params: Partial<GroupType>): PromiseRes {
         return Request.post(`${v1}/group`, params);

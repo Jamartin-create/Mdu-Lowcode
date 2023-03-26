@@ -17,6 +17,20 @@ export const ItemStore = defineStore({
     }),
     getters: {},
     actions: {
+        async choseOneItem(itemId: string) {
+            try {
+                const snO = SysStore().snackOpen;
+                const { code, msg, data: { item, group } } = await ItemApi.getItemById(itemId);
+                if (code != 0) {
+                    snO(msg);
+                    return;
+                }
+                this.curItem = item;
+                this.curItemGroup = group;
+            } catch (e) {
+                console.error(e);
+            }
+        },
         async saveCurItem(params: Partial<ItemType>) {
             try {
                 const snO = SysStore().snackOpen;

@@ -47,15 +47,20 @@ import { ItemStore } from "../../store/modules/item";
 const emits = defineEmits(["select"]);
 const itemPinia = ItemStore();
 
+let list: any[] = [];
+if (itemPinia.curItemGroup) {
+  list = itemPinia.curItemGroup.groupJson!.slice();
+}
+
 //画板中的组件列表
-const componentList = ref<any[]>([]);
+const componentList = ref<any[]>(list);
+
 watch(
   () => componentList,
   (n) => {
-    console.log(n.value);
     itemPinia.saveGroup(n.value);
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: false }
 );
 
 //组件选中操作

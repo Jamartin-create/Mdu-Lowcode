@@ -7,12 +7,13 @@
         :title="item.itemTitle"
         :description="item.itemDscription"
         :item-id="item.itemId"
+        @to-editor="toEditor"
       />
       <v-card>
         <v-card-title>ITEM</v-card-title>
         <v-card-subtitle> 暂时没有更多了 </v-card-subtitle>
         <v-card-actions>
-          <v-btn variant="text" @click="toEditor(null)"> 新增 </v-btn>
+          <v-btn variant="text" @click="toEditor()"> 新增 </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -24,6 +25,7 @@ import ItemApi from "../../api/item";
 import ItemCard from "./components/ItemCard.vue";
 import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { SysStore } from "../../store/modules/sys";
 type RouterParams = {
   path?: string;
   name?: string;
@@ -35,22 +37,18 @@ const itemList = reactive<any[]>([]);
 async function getList() {
   try {
     const { data, code, msg } = await ItemApi.getAllItem();
-    if (code == 0) {
-      Array.prototype.push.apply(itemList, data);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
       return;
     }
-    console.error(msg);
+    Array.prototype.push.apply(itemList, data);
   } catch (e) {
     console.error(e);
   }
 }
 
-function toEditor(param: any) {
-  const params: RouterParams = {
-    name: "editor",
-  };
-  if (param != null) params.params = param;
-  router.push(params);
+function toEditor() {
+  router.push({ name: "editor" });
 }
 
 onMounted(() => {

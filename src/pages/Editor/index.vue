@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Panel from "./Panel.vue";
 import LeftSideBar from "./LeftSideBar.vue";
 import RightSiderBar from "./RightSiderBar.vue";
