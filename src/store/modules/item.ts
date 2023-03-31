@@ -4,7 +4,6 @@ import piniaPersistConfig from '../piniaPersistConfig'
 import ItemApi from '../../api/item'
 import { ItemType } from '../../api/item';
 import { SysStore } from './sys';
-import { GroupType } from '../../api/group';
 import GroupApi from '../../api/group';
 import { guid } from '../../../server/src/utils/strHandler';
 
