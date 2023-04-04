@@ -47,7 +47,9 @@ export default class ComponentService {
             res.send({
                 code: 0, msg: 'success', data: {
                     props: comp.compProps,
-                    styles: comp.compStyles
+                    styles: comp.compStyles,
+                    type: comp.compType,
+                    dsId: comp.dataSourceId
                 }
             });
         } catch (e) {
