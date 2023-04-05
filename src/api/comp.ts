@@ -11,6 +11,7 @@ export interface CompType {
     dataSourceId: string | null;
     compProps: any[];
     compStyles: any[];
+    compDts: any[];
 }
 
 export default class CompApi {
@@ -29,6 +30,10 @@ export default class CompApi {
     //新增物料
     static saveComp(params: Partial<CompType>): PromiseRes {
         return Request.post(`${v1}/comp/`, params)
+    }
+    //新增物料2
+    static saveComp2(params: Partial<CompType>): PromiseRes {
+        return Request.post(`${v1}/comp/save`, params)
     }
     //删除物料
     static delComp(id: string): PromiseRes {

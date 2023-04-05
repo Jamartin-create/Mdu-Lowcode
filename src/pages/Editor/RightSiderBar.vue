@@ -14,7 +14,7 @@
       </v-window-item>
       <v-window-item value="d">
         <v-container>
-          <InputFieldAPI :dsId="dataSourceId!" />
+          <InputField :list="dstlist" :vModel="info" />
         </v-container>
       </v-window-item>
     </v-window>
@@ -26,7 +26,6 @@ import { ref, reactive } from "vue";
 import CompApi from "../../api/comp";
 import { replaceArray } from "../../utils/common";
 import InputField from "./components/InputField.vue";
-import InputFieldAPI from "./components/InputFieldAPI.vue";
 import { SysStore } from "../../store/modules/sys";
 
 type Element = {
@@ -52,8 +51,8 @@ function catchCom({ compId, props, styles }: Partial<Element>) {
 //获取物料的props 和 styles 和 dataSourceGroup（数据源）
 const propsList = reactive<any[]>([]);
 const stylesList = reactive<any[]>([]);
+const dstlist = reactive<any[]>([]);
 const compType = ref<string>("");
-const dataSourceId = ref<string | null>("");
 async function getProps(id: string) {
   try {
     const { code, msg, data } = await CompApi.getCompProps(id);
@@ -61,12 +60,11 @@ async function getProps(id: string) {
       SysStore().snackOpen(msg);
       return;
     }
-    console.log(data);
     replaceArray(propsList, data.props);
     replaceArray(stylesList, data.styles);
     compType.value = data.type;
     if (data.type == "visual") {
-      dataSourceId.value = data.dsId;
+      replaceArray(dstlist, data.dts);
     }
   } catch (e) {
     console.error(e);

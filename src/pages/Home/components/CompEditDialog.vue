@@ -49,14 +49,14 @@
                     variant="underlined"
                     density="comfortable"
                   ></v-text-field>
-                  <v-text-field
+                  <!-- <v-text-field
                     :disabled="formParams.compType != 'visual'"
                     v-model="formParams.dataSourceId"
                     label="数据源Id"
                     variant="underlined"
                     density="comfortable"
                     @click="dsChoseDia?.open()"
-                  ></v-text-field>
+                  ></v-text-field> -->
                 </v-container>
               </v-card-text>
             </v-card>
@@ -66,6 +66,9 @@
             <v-tabs v-model="tab">
               <v-tab value="props">Props</v-tab>
               <v-tab value="styles">Styles</v-tab>
+              <v-tab value="dts" :disabled="formParams.compType != 'visual'">
+                DataSrouce
+              </v-tab>
             </v-tabs>
             <v-window v-model="tab">
               <v-window-item value="props">
@@ -73,6 +76,9 @@
               </v-window-item>
               <v-window-item value="styles">
                 <OptionsListForm ref="stylesList" />
+              </v-window-item>
+              <v-window-item value="dts">
+                <OptionsListForm ref="dsList" />
               </v-window-item>
             </v-window>
           </v-col>
@@ -99,6 +105,7 @@ getDictEntryByCode("COMP_TYPE");
 const dsChoseDia = ref<InstanceType<typeof DatasourceChoseDialog>>();
 const propsList = ref<InstanceType<typeof OptionsListForm>>();
 const stylesList = ref<InstanceType<typeof OptionsListForm>>();
+const dsList = ref<InstanceType<typeof OptionsListForm>>();
 
 const formParams = reactive<Partial<CompType>>({
   compName: null,
@@ -107,6 +114,7 @@ const formParams = reactive<Partial<CompType>>({
   dataSourceId: null,
   compProps: [],
   compStyles: [],
+  compDts: [],
 });
 
 const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
@@ -119,7 +127,8 @@ async function save() {
   try {
     formParams.compProps = propsList.value?.formList || [];
     formParams.compStyles = stylesList.value?.formList || [];
-    const { code, msg } = await CompApi.saveComp(formParams);
+    formParams.compDts = dsList.value?.formList || [];
+    const { code, msg } = await CompApi.saveComp2(formParams);
     if (code != 0) {
       SysStore().snackOpen(msg);
       return;

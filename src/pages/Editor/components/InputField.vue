@@ -22,6 +22,7 @@ const { list, vModel } = defineProps<{
 
 const formList = reactive<any[]>([]);
 function updateList() {
+  console.log(list);
   replaceArray(
     formList,
     list.map((item) => {
@@ -44,6 +45,7 @@ function updateList() {
         getDictEntryByID(item.selectGroup);
         el.props.items = dictEntryList;
       }
+      console.log(el);
       return el;
     })
   );
@@ -53,7 +55,7 @@ watch(
   (n) => {
     updateList();
   },
-  { deep: true, immediate: false }
+  { deep: true, immediate: true }
 );
 </script>
 
