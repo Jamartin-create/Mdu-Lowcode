@@ -55,7 +55,7 @@ export const CompSchema = new MySchema({
     compType: String,
     compProps: Array<CompProp>,
     compStyles: Array<CompProp>,
-    dataSourceId: String,
+    compDts: Array<CompProp>,
 }).getSchema();
 
 /**

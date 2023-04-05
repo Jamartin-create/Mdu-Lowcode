@@ -49,11 +49,12 @@ export default class ComponentService {
                     props: comp.compProps,
                     styles: comp.compStyles,
                     type: comp.compType,
-                    dsId: comp.dataSourceId
+                    dts: comp.compDts
                 }
             });
         } catch (e) {
-
+            console.log(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
         }
     }
 
@@ -72,6 +73,25 @@ export default class ComponentService {
             ...initSchemaInfo(getUserInfo(req).userId)
         }), res, next);
     }
+
+
+    //新增物料（new）
+    //compDts：数据源配置项
+    static saveOneNew = (req: Request, res: Response, next: NextFunction) => {
+        const { body: { compName, compTitle, compType, compProps, compStyles, compDts } } = req;
+        if (!compTitle || !compType || !compProps || !compStyles || (compType == "visual" && !compDts)) return next(ErrCode.PARAM_EXCEPTION);
+        exceptionOnSave(new compModel({
+            compId: guid(),
+            compName,
+            compTitle,
+            compType,
+            compProps,
+            compStyles,
+            compDts,
+            ...initSchemaInfo(getUserInfo(req).userId)
+        }), res, next);
+    }
+
     //删除物料
     static delOne = async (req: Request, res: Response, next: NextFunction) => {
         const { query: { compId } } = req;

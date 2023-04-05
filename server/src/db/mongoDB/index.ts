@@ -7,7 +7,7 @@ export function connect(): void {
     console.log(MG_URL)
     mongoose.connect(MG_URL, err => {
         if (err) console.log(err);
-        else console.log('MongoDB连接成功')
+        else console.log('MongoDB 连接成功！')
     })
 }
 

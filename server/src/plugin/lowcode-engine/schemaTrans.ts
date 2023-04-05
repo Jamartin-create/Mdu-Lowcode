@@ -12,6 +12,7 @@ export type CompReturnType = {
     dataSourceId: string;
     compProps: Props;
     compStyles: Props;
+    dsOptions: Props;
 }
 
 //翻译Schema

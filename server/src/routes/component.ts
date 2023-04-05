@@ -12,4 +12,6 @@ routes.route('/comp')
 routes.route('/comp/options')
     .get(ComponentService.getCompProps);
 
+routes.post('/comp/save', ComponentService.saveOneNew);
+
 export default routes;
