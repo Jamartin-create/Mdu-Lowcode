@@ -18,4 +18,5 @@ export const MQ_OPTIONS: Options = {
     port: process.env.MQ_PORT as unknown as number,
     dialect: "mysql",
     timezone: process.env.MQ_TIMEZONE,
+    logging: console.log,
 };
