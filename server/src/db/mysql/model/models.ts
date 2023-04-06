@@ -46,7 +46,7 @@ export const valueModelOptions = {
     val_value: {
         type: DataTypes.STRING
     },
-    val_time: {
+    create_time: {
         type: DataTypes.DATE
     },
     data_id: {

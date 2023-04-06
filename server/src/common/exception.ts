@@ -42,6 +42,7 @@ export const ErrCode = {
     DICT_CODE_CONFILICT_EXCEPTION: generatorError({ code: 90012, msg: '字典CODE冲突' }),
     DICT_TYPE_NOT_FOUND_EXCEPTION: generatorError({ code: 90013, msg: '未找到字典Type' }),
     COMP_NOT_FOUND_EXCEPTION: generatorError({ code: 90014, msg: '未找到物料' }),
+    MQ_DATA_NOT_FOUND: generatorError({ code: 90015, msg: '未找到数据' }),
 }
 
 //请求异常捕获（链式调用结尾）

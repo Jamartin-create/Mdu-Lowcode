@@ -17,5 +17,7 @@ routes.route('/value')
     .post(MysqlApiService.saveValue)
     .delete(MysqlApiService.deleteValue)
 
+routes.get('/statistics', MysqlApiService.getStatistics)
+
 
 export default routes;
