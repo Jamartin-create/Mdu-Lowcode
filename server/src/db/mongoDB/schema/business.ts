@@ -65,11 +65,8 @@ export const CompSchema = new MySchema({
 export const DataSourceSchema = new MySchema({
     dsId: String,
     dsTitle: String,
-    dsNumbers: Number,
-    dsColumns: Array<String>,
-    dsStaticDatas: Array<Array<Number>>,
+    dsStaticDatas: Object,
     dsApiPath: String,
-    dsPath: String,
 }).getSchema();
 
 
