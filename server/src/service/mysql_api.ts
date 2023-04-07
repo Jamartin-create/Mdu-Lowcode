@@ -28,15 +28,21 @@ export async function getLineChartData(dev_id: string, data_code: string, start_
     }
     const value = await valueModel.findAll({ order: [['create_time', 'ASC']], where: { [Op.and]: wheres } });
     return {
-        device: dev_id,
-        data_label: data.data_label,
-        list: value.map((v: any) => {
-            const timestamp = new Date(v.create_time);
-            return {
-                time: `${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`,
-                value: v.val_value
-            }
-        })
+
+        legend: {
+            data: [data.data_label]
+        },
+        xAxis: {
+            data: value.map((v: any) => {
+                const timestamp = new Date(v.create_time);
+                return `${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`;
+            })
+        },
+        series: [{
+            name: data.data_label,
+            type: 'line',
+            data: value.map((v: any) => v.val_value)
+        }]
     };
 }
 
