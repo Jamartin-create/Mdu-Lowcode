@@ -9,12 +9,12 @@
       <v-window-item value="s">样式</v-window-item>
       <v-window-item value="a">
         <v-container>
-          <InputField :list="propsList" :vModel="info" />
+          <InputField :list="propsList" :vModel="info.props" />
         </v-container>
       </v-window-item>
       <v-window-item value="d">
         <v-container>
-          <InputField :list="dstlist" :vModel="info" />
+          <InputField :list="dstlist" :vModel="info.dts" />
         </v-container>
       </v-window-item>
     </v-window>
@@ -36,15 +36,17 @@ type Element = {
   type: string;
   props: any;
   styles: any;
+  dts: any;
   dataSourceId: string;
 };
 
 //获取基本信息
 const info = reactive<Partial<Element>>({});
-function catchCom({ compId, props, styles }: Partial<Element>) {
+function catchCom({ compId, props, styles, dts }: Partial<Element>) {
   info.compId = compId;
   info.props = props;
   info.styles = styles;
+  info.dts = dts;
   getProps(compId!);
 }
 

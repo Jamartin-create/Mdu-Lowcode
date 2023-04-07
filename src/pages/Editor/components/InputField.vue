@@ -4,16 +4,21 @@
       v-for="item in formList"
       :key="item.id"
       :is="item.tag"
-      v-model="vModel.props[item.name]"
+      v-model="vModel[item.name]"
       v-bind="item.props"
+      @click="openDsChoose(item.name)"
     />
   </v-container>
+  <DiaChoseDataList ref="diaChoose" @on-chose="chose" />
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { reactive, watch, ref } from "vue";
 import { useDict } from "../../../hooks/useDict";
 import { replaceArray } from "../../../utils/common";
+import DiaChoseDataList from "./DiaChoseDataList.vue";
+
+const diaChoose = ref<InstanceType<typeof DiaChoseDataList>>();
 
 const { list, vModel } = defineProps<{
   list: any[];
@@ -22,7 +27,6 @@ const { list, vModel } = defineProps<{
 
 const formList = reactive<any[]>([]);
 function updateList() {
-  console.log(list);
   replaceArray(
     formList,
     list.map((item) => {
@@ -45,10 +49,18 @@ function updateList() {
         getDictEntryByID(item.selectGroup);
         el.props.items = dictEntryList;
       }
-      console.log(el);
       return el;
     })
   );
+}
+
+function chose(dtId: string) {
+  vModel["datasourceid"] = dtId;
+}
+
+function openDsChoose(elName: string) {
+  if (elName != "datasourceid") return;
+  diaChoose.value?.open();
 }
 watch(
   () => list,

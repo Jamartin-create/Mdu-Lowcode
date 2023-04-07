@@ -11,6 +11,10 @@ export interface DataSourceType {
 }
 
 export default class DataSourceApi {
+    //根据id获取数据源
+    static getOneById(id: string): PromiseRes {
+        return Request.get(`${v1}/dataSource/${id}`);
+    }
     //获取数据源列表
     static getList(): PromiseRes {
         return Request.get(`${v1}/dataSource`);

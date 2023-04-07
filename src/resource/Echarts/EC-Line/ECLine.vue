@@ -3,44 +3,83 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useCharts } from "../../../hooks/useCharts";
 import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
 import { watch } from "vue";
+import DataSourceApi from "../../../api/datasource";
+import MQAPIApi from "../../../api/mysql_api";
+import { SysStore } from "../../../store/modules/sys";
 
 const Line = ref();
 
 const { updateEchart } = useCharts(Line);
 
-const props = withDefaults(
-  defineProps<{
-    title?: string;
-    data?: any;
-  }>(),
+const props = defineProps<{
+  dts: any;
+  styles: any;
+  title?: string;
+}>();
+
+const options = ref<any>({});
+watch(
+  () => props,
+  async (n) => {
+    if (n.dts.type == "sync") {
+      await getData();
+    }
+    if (n.dts.type != "sync") {
+      options.value = {};
+    }
+    updateEchart(getOption());
+  },
   {
-    title: "原始数据",
-    data: {
-      labels: ["牛奶", "橙汁", "草莓波波"],
-      values: [1000, 2000, 3000],
-    },
+    deep: true,
+    immediate: true,
   }
 );
+
+async function getData() {
+  try {
+    const {
+      code,
+      msg,
+      data: ds,
+    } = await DataSourceApi.getOneById(props.dts.datasourceid);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    {
+      const { code, msg, data } = await MQAPIApi.getUrlData({
+        url: ds.dsApiPath,
+        options: {
+          dev_id: "5c6e31cf-e5d7-493a-b4f4-41741ff4c167",
+          data_code: "WATER_CHANGE0",
+        },
+      });
+      options.value = data;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 function getOption() {
   const option: EChartsOption = {
     title: {
-      text: props.title,
+      text: props.title || "普通折线图",
     },
-    // tooltip: {
-    //   trigger: "item",
-    //   formatter: function (params: any) {
-    //     return "value:" + params.value;
-    //   },
-    // },
+    tooltip: {
+      trigger: "item",
+      formatter: function (params: any) {
+        return "value:" + params.value;
+      },
+    },
     xAxis: {
       type: "category",
-      data: props.data.labels,
+      data: ["牛奶", "橙汁", "草莓波波"],
     },
     yAxis: {
       type: "value",
@@ -48,9 +87,10 @@ function getOption() {
     series: [
       {
         type: "line",
-        data: props.data.values,
+        data: [1000, 2000, 3000],
       },
     ],
+    ...options.value,
   };
   return option as EChartsOption;
 }

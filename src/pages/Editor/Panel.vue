@@ -20,9 +20,14 @@
               @click="deleteConfirm(element.id)"
             ></v-icon>
           </div>
-          <component :is="element.tag" v-bind="element.props">{{
-            element.tag == "v-btn" ? element.props.text : ""
-          }}</component>
+          <component
+            :is="element.tag"
+            v-bind="element.props"
+            v-bind:dts="element.dts"
+            v-bind:styles="element.styles"
+            v-bind:props2="element.props"
+            >{{ element.tag == "v-btn" ? element.props.text : "" }}</component
+          >
         </div>
       </template>
     </draggable>
