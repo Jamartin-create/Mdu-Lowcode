@@ -6,16 +6,17 @@ type PromiseRes = Promise<ResType>;
 export interface DataSourceType {
     dsId: string,
     dsTitle: string,
-    dsNumbers: number,
-    dsColumns: string[],
-    dsStaticDatas: number[][],
+    dsStaticDatas: Object,
     dsApiPath: string,
-    dsPath: string,
 }
 
 export default class DataSourceApi {
     //获取数据源列表
     static getList(): PromiseRes {
         return Request.get(`${v1}/dataSource`);
+    }
+    //新增数据源
+    static saveOne(params: Partial<DataSourceType>): PromiseRes {
+        return Request.post(`${v1}/dataSource`, params);
     }
 }

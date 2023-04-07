@@ -21,7 +21,6 @@
                 <th>编号</th>
                 <th>标题</th>
                 <th>动态数据API</th>
-                <th>数据源地址</th>
                 <th class="text-center" width="80">操作</th>
               </tr>
             </thead>
@@ -30,7 +29,6 @@
                 <td>{{ ds.dsId }}</td>
                 <td>{{ ds.dsTitle }}</td>
                 <td>{{ ds.dsApiPath }}</td>
-                <td>{{ ds.dsPath }}</td>
                 <td>
                   <v-btn variant="text" @click="chose(ds.dsId)"> 选择 </v-btn>
                 </td>
