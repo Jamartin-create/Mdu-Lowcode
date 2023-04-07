@@ -9,6 +9,19 @@ import { guid } from '../utils/strHandler';
 const dsModel = useModel("dataSource", DataSourceSchema);
 
 export default class DataSourceService {
+    //根据id获取数据源
+    static getDSById = async (req: Request, res: Response, next: NextFunction) => {
+        const { params: { id } } = req;
+        if (!id) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const ds = await dsModel.findOne({ dsId: id });
+            if (!ds) return next(ErrCode.DATASOURCE_NOT_FOUND_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: ds });
+        } catch (e) {
+            console.log(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
     //获取
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         const ds = await dsModel.find();

@@ -12,12 +12,12 @@ export type CompReturnType = {
     dataSourceId: string;
     compProps: Props;
     compStyles: Props;
-    dsOptions: Props;
+    compDts: Props;
 }
 
 //翻译Schema
 export function translateSchema(props: any[]): Partial<CompReturnType>[] {
-    return props.map(({ compId, compName, compProps, compStyles, compTitle, compType, dataSourceId }) => {
+    return props.map(({ compId, compName, compProps, compStyles, compTitle, compType, dataSourceId, compDts }) => {
         return {
             id: compId,
             compId: compId,
@@ -27,6 +27,7 @@ export function translateSchema(props: any[]): Partial<CompReturnType>[] {
             dataSourceId: dataSourceId,
             props: transOptions(compProps),
             styles: transOptions(compStyles),
+            dts: transOptions(compDts)
         }
     })
 }
@@ -36,7 +37,7 @@ export function transOptions(props: CompProp[]): Props {
     const res: Props = {};
     props.forEach((it, id) => {
         if (it.type == 'text') {
-            res[it.name as string] = '请输入' + it.text;
+            // res[it.name as string] = '请输入' + it.text;
         } else if (it.type == 'select') {
             // res[it.name as string] = 'default';
         }
