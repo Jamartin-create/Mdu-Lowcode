@@ -3,14 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { useCharts } from "../../../hooks/useCharts";
+import { ref } from "vue";
+import { useCharts, useChartData } from "../../../hooks/useCharts";
 import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
 import { watch } from "vue";
-import DataSourceApi from "../../../api/datasource";
-import MQAPIApi from "../../../api/mysql_api";
-import { SysStore } from "../../../store/modules/sys";
 
 const Line = ref();
 
@@ -22,12 +19,12 @@ const props = defineProps<{
   title?: string;
 }>();
 
-const options = ref<any>({});
+const { options, getData } = useChartData();
 watch(
   () => props,
   async (n) => {
     if (n.dts.type == "sync") {
-      await getData();
+      await getData(props.dts.datasourceid);
     }
     if (n.dts.type != "sync") {
       options.value = {};
@@ -39,32 +36,6 @@ watch(
     immediate: true,
   }
 );
-
-async function getData() {
-  try {
-    const {
-      code,
-      msg,
-      data: ds,
-    } = await DataSourceApi.getOneById(props.dts.datasourceid);
-    if (code != 0) {
-      SysStore().snackOpen(msg);
-      return;
-    }
-    {
-      const { code, msg, data } = await MQAPIApi.getUrlData({
-        url: ds.dsApiPath,
-        options: {
-          dev_id: "5c6e31cf-e5d7-493a-b4f4-41741ff4c167",
-          data_code: "WATER_CHANGE0",
-        },
-      });
-      options.value = data;
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 function getOption() {
   const option: EChartsOption = {

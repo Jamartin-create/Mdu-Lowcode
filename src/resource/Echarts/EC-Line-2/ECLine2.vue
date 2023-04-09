@@ -1,20 +1,17 @@
 <template>
-  <div ref="Line" :style="{ width: '100%', height: '200px' }"></div>
+  <div ref="Line2" :style="{ width: '100%', height: '200px' }"></div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useCharts } from "../../../hooks/useCharts";
+import { useCharts, useChartData } from "../../../hooks/useCharts";
 import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
 import { watch } from "vue";
-import DataSourceApi from "../../../api/datasource";
-import MQAPIApi from "../../../api/mysql_api";
-import { SysStore } from "../../../store/modules/sys";
 
-const Line = ref();
+const Line2 = ref();
 
-const { updateEchart } = useCharts(Line);
+const { updateEchart } = useCharts(Line2);
 
 const props = defineProps<{
   dts: any;
@@ -22,12 +19,12 @@ const props = defineProps<{
   title?: string;
 }>();
 
-const options = ref<any>({});
+const { options, getData } = useChartData();
 watch(
   () => props,
   async (n) => {
     if (n.dts.type == "sync") {
-      await getData();
+      await getData(props.dts.datasourceid);
     }
     if (n.dts.type != "sync") {
       options.value = {};
@@ -39,33 +36,6 @@ watch(
     immediate: true,
   }
 );
-
-async function getData() {
-  try {
-    const {
-      code,
-      msg,
-      data: ds,
-    } = await DataSourceApi.getOneById(props.dts.datasourceid);
-    if (code != 0) {
-      SysStore().snackOpen(msg);
-      return;
-    }
-    {
-      const { code, msg, data } = await MQAPIApi.getUrlData({
-        url: ds.dsApiPath,
-        options: {
-          dev_id: ds.devId.join(","),
-          data_code: ds.dataCode,
-        },
-      });
-      options.value = data;
-      console.log(data);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 function getOption() {
   const option: EChartsOption = {

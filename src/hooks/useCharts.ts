@@ -2,6 +2,10 @@ import type { Ref } from 'vue'
 import { onMounted } from 'vue';
 import * as echarts from 'echarts';
 import { onUnmounted } from 'vue';
+import DataSourceApi from '../api/datasource';
+import { SysStore } from '../store/modules/sys';
+import MQAPIApi from '../api/mysql_api';
+import { ref } from 'vue';
 
 type EchartOption = echarts.EChartsOption | any;
 export function useCharts(chartEL: Ref<ElRef | undefined | null>) {
@@ -29,4 +33,35 @@ export function useCharts(chartEL: Ref<ElRef | undefined | null>) {
         }
     }
     return { updateEchart }
+}
+
+
+export function useChartData() {
+    const options = ref<any>({});
+    async function getData(id: string) {
+        try {
+            const { code, msg, data: ds } = await DataSourceApi.getOneById(id);
+            if (code != 0) {
+                SysStore().snackOpen(msg);
+                return;
+            }
+            {
+                const { code, msg, data } = await MQAPIApi.getUrlData({
+                    url: ds.dsApiPath,
+                    options: {
+                        dev_id: ds.devId.join(","),
+                        data_code: ds.dataCode,
+                    },
+                });
+                if (code != 0) {
+                    SysStore().snackOpen(msg);
+                    return;
+                }
+                options.value = data;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    return { options, getData };
 }

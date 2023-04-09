@@ -1,5 +1,5 @@
 <template>
-  <div ref="Bar" :style="{ width: '100%', height: '200px' }"></div>
+  <div ref="Bar2" :style="{ width: '100%', height: '200px' }"></div>
 </template>
 
 <script setup lang="ts">
@@ -9,9 +9,9 @@ import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
 import { watch } from "vue";
 
-const Bar = ref();
+const Bar2 = ref();
 
-const { updateEchart } = useCharts(Bar);
+const { updateEchart } = useCharts(Bar2);
 
 const props = defineProps<{
   dts: any;
@@ -50,13 +50,41 @@ function getOption() {
     },
     xAxis: {
       type: "category",
-      data: ["数据1", "数据2", "数据3", "数据4"],
+      data: ["设备1", "设备2", "设备3", "设备4"],
     },
     yAxis: {
       type: "value",
     },
     series: [
       {
+        name: "数据1",
+        type: "bar",
+        showBackground: true,
+        backgroundStyle: {
+          color: "rgba(180, 180, 180, 0.2)",
+        },
+        data: [500, 1000, 1200, 567],
+      },
+      {
+        name: "数据2",
+        type: "bar",
+        showBackground: true,
+        backgroundStyle: {
+          color: "rgba(180, 180, 180, 0.2)",
+        },
+        data: [500, 1000, 1200, 567],
+      },
+      {
+        name: "数据3",
+        type: "bar",
+        showBackground: true,
+        backgroundStyle: {
+          color: "rgba(180, 180, 180, 0.2)",
+        },
+        data: [500, 1000, 1200, 567],
+      },
+      {
+        name: "数据4",
         type: "bar",
         showBackground: true,
         backgroundStyle: {
