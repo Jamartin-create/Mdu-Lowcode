@@ -67,6 +67,8 @@ export const DataSourceSchema = new MySchema({
     dsTitle: String,
     dsStaticDatas: Object,
     dsApiPath: String,
+    devId: Array<String>,
+    dataCode: String,
 }).getSchema();
 
 

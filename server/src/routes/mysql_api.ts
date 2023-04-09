@@ -4,11 +4,13 @@ import { ErrCode } from '../common/exception';
 
 const routes = Router();
 
+routes.get('/device/list', MysqlApiService.getDeviceList)
 routes.route('/device')
     .post(MysqlApiService.saveDevice)
     .delete(MysqlApiService.deleteDevice)
     .put(MysqlApiService.editDevice)
 
+routes.get('/data/list', MysqlApiService.getDataList)
 routes.route('/data')
     .post(MysqlApiService.saveData)
     .delete(MysqlApiService.deleteData)
@@ -41,10 +43,10 @@ routes.get('/line/singleData', async function (req, res, next) {
 //多数据源折线图（按时间分类）
 routes.get('/line/multiData', async function (req, res, next) {
     try {
-        const { dev_ids, data_code, start_time, end_time } = req.query;
-        if (!dev_ids || !data_code) return next(ErrCode.PARAM_EXCEPTION);
+        const { dev_id, data_code, start_time, end_time } = req.query;
+        if (!dev_id || !data_code) return next(ErrCode.PARAM_EXCEPTION);
         try {
-            const data = await getMultiLineChartSql((dev_ids as string).split(","), data_code as string, start_time as string, end_time as string, next);
+            const data = await getMultiLineChartSql((dev_id as string).split(","), data_code as string, start_time as string, end_time as string, next);
             return res.send({ code: 0, msg: 'success', data });
         } catch (e) {
             console.log(e);

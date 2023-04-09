@@ -30,13 +30,15 @@ export default class DataSourceService {
 
     //新增
     static saveDS = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { dsTitle, dsStaticDatas, dsApiPath } } = req;
+        const { body: { dsTitle, dsStaticDatas, dsApiPath, devId, dataCode } } = req;
         if (!dsTitle || (!dsStaticDatas && !dsApiPath)) return next(ErrCode.PARAM_EXCEPTION);
         exceptionOnSave(new dsModel({
             dsId: guid(),
             dsTitle,
             dsStaticDatas: dsStaticDatas || null,
             dsApiPath: dsApiPath || null,
+            devId: devId || null,
+            dataCode: dataCode || null,
             ...initSchemaInfo(getUserInfo(req).userId)
         }), res, next);
     }

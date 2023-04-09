@@ -100,6 +100,29 @@ function getDataByCategory(categoryBy: string, dev_id: string, data_code: string
 
 export default class MysqlApiService {
 
+    //获取设备列表
+    static async getDeviceList(req: Request, res: Response, next: NextFunction) {
+        try {
+            const devices = await deviceModel.findAll();
+            return res.send({ code: 0, msg: 'success', data: devices });
+        } catch (e) {
+            console.log(e);
+            return next(ErrCode.SELECT_MQ_EXCEPTION);
+        }
+    }
+
+    //获取数据字段列表
+    static async getDataList(req: Request, res: Response, next: NextFunction) {
+        try {
+            //按data_code分组查询
+            const data = await dataModel.findAll({ attributes: ['data_code', 'data_name', 'data_label'], group: ['data_code'] });
+            return res.send({ code: 0, msg: 'success', data });
+        } catch (e) {
+            console.log(e);
+            return next(ErrCode.SELECT_MQ_EXCEPTION);
+        }
+    }
+
     //统计查询
     static async getStatistics(req: Request, res: Response, next: NextFunction) {
         const { categoryBy, dev_id, data_code, start_time, end_time } = req.body;
