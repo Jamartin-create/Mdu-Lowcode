@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { initModel } from '../db/mysql'
+import { initModel, sequelize } from '../db/mysql'
 import { deviceModelOptions, dataModelOptions, valueModelOptions } from '../db/mysql/model/models'
 import { guid } from '../utils/strHandler';
 import { ErrCode } from '../common/exception';
@@ -70,6 +70,89 @@ export async function getMultiLineChartSql(dev_ids: string[], data_code: string,
             name: legend[idx],
             type: 'line',
             data: value.filter((v: any) => v.data_id == d.id).map((v: any) => v.val_value)
+        }
+    });
+    return {
+        legend: {
+            data: legend
+        },
+        xAxis: {
+            data: xAxis
+        },
+        series: series
+    };
+}
+
+//单一设备多字段条形图查询
+export async function getBarChartData(dev_id: string, next?: NextFunction) {
+    const data: any[] = await dataModel.findAll({ where: { dev_id: dev_id } });
+    if (data.length == 0) return next(ErrCode.MQ_DATA_NOT_FOUND);
+    //统计每个字段近30天的数据
+    const wheres: any[] = [{ data_id: { [Op.in]: data.map((d: any) => d.id) }, create_time: { [Op.between]: [new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), new Date()] } }];
+    //获取数据总和
+    const value = await valueModel.findAll({
+        attributes: [
+            'data_id', [valueModel.sequelize.fn('sum', valueModel.sequelize.col('val_value')), 'val_value'
+            ]],
+        group: ['data_id'],
+        where: { [Op.and]: wheres }
+    });
+    const legend = data.map((d: any) => d.data_label);
+    const xAxis = data.map((d: any) => d.data_label);
+    const series = [{
+        name: '数据总和',
+        type: 'bar',
+        showBackground: true,
+        data: data.map((d: any) => {
+            const v: any = value.find((v: any) => v.data_id == d.id);
+            return v ? v.val_value : 0;
+        })
+    }];
+    return {
+        legend: {
+            data: legend
+        },
+        xAxis: {
+            data: xAxis
+        },
+        series: series
+    };
+}
+
+//多设备多字段条形图查询
+export async function getMultipleDevice(dev_id: string, next?: NextFunction) {
+    const data: any[] = await dataModel.findAll({ where: { dev_id: { [Op.in]: dev_id.split(",") } } });
+    if (data.length == 0) return next(ErrCode.MQ_DATA_NOT_FOUND);
+    const device: any[] = await deviceModel.findAll({ where: { id: { [Op.in]: dev_id.split(",") } } });
+    if (device.length == 0) return next(ErrCode.MQ_DATA_NOT_FOUND);
+    //统计每个字段近30天的数据
+    const wheres: any[] = [{ data_id: { [Op.in]: data.map((d: any) => d.id) }, create_time: { [Op.between]: [new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), new Date()] } }];
+    //获取数据总和
+    const value = await valueModel.findAll({
+        attributes: [
+            'data_id', [valueModel.sequelize.fn('sum', valueModel.sequelize.col('val_value')), 'val_value']
+        ],
+        group: ['data_id'],
+        where: { [Op.and]: wheres }
+    });
+    const nV = value.map((v: any) => {
+        const d: any = data.find((d: any) => d.id == v.data_id);
+        return {
+            data_id: v.data_id,
+            val_value: v.val_value,
+            data_code: d.data_code,
+        }
+    });
+    const set = new Set();
+    const filterData = data.filter((d: any) => { return set.has(d.data_label) ? false : set.add(d.data_label) });
+    const legend = filterData.map((d: any) => d.data_label);
+    const xAxis = device.map((d: any) => d.dev_name);
+    const series = filterData.map((l: any) => {
+        return {
+            name: l.data_label,
+            type: 'bar',
+            showBackground: true,
+            data: nV.filter((v: any) => v.data_code == l.data_code).map((v: any) => v.val_value)
         }
     });
     return {

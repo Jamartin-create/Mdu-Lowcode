@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import MysqlApiService, { getLineChartData, getMultiLineChartSql } from '../service/mysql_api';
+import MysqlApiService, { getBarChartData, getLineChartData, getMultiLineChartSql, getMultipleDevice } from '../service/mysql_api';
 import { ErrCode } from '../common/exception';
 
 const routes = Router();
@@ -29,7 +29,7 @@ routes.get('/line/singleData', async function (req, res, next) {
         if (!dev_id || !data_code) return next(ErrCode.PARAM_EXCEPTION);
         try {
             const data = await getLineChartData(dev_id as string, data_code as string, start_time as string, end_time as string, next);
-            return res.send({ code: 0, msg: 'success', data });
+            res.send({ code: 0, msg: 'success', data });
         } catch (e) {
             console.log(e);
             return next(ErrCode.SELECT_MQ_EXCEPTION);
@@ -47,7 +47,7 @@ routes.get('/line/multiData', async function (req, res, next) {
         if (!dev_id || !data_code) return next(ErrCode.PARAM_EXCEPTION);
         try {
             const data = await getMultiLineChartSql((dev_id as string).split(","), data_code as string, start_time as string, end_time as string, next);
-            return res.send({ code: 0, msg: 'success', data });
+            res.send({ code: 0, msg: 'success', data });
         } catch (e) {
             console.log(e);
             return next(ErrCode.SELECT_MQ_EXCEPTION);
@@ -58,5 +58,40 @@ routes.get('/line/multiData', async function (req, res, next) {
     }
 });
 
+//单设备多数据字段条形图（近一周数据）
+routes.get('/pie/multiData', async function (req, res, next) {
+    try {
+        const { dev_id } = req.query;
+        if (!dev_id) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const data = await getBarChartData(dev_id as string);
+            res.send({ code: 0, msg: 'success', data });
+        } catch (e) {
+            console.log(e);
+            return next(ErrCode.SELECT_MQ_EXCEPTION);
+        }
+    } catch (e) {
+        console.log(e);
+        return next(ErrCode.SELECT_MQ_EXCEPTION);
+    }
+});
+
+//多设备多数据字段条形图（近一个月数据）
+routes.get('/pie/multiDevice', async function (req, res, next) {
+    try {
+        const { dev_id } = req.query;
+        if (!dev_id) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const data = await getMultipleDevice(dev_id as string);
+            res.send({ code: 0, msg: 'success', data });
+        } catch (e) {
+            console.log(e);
+            return next(ErrCode.SELECT_MQ_EXCEPTION);
+        }
+    } catch (e) {
+        console.log(e);
+        return next(ErrCode.SELECT_MQ_EXCEPTION);
+    }
+});
 
 export default routes;
