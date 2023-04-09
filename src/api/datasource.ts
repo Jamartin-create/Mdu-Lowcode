@@ -8,6 +8,8 @@ export interface DataSourceType {
     dsTitle: string,
     dsStaticDatas: Object,
     dsApiPath: string,
+    devId: string[] | string | null,
+    dataCode: string | null,
 }
 
 export default class DataSourceApi {

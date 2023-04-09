@@ -16,7 +16,7 @@
         <v-toolbar-title>新增数据源</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn @click="save"> 保存 </v-btn>
+          <v-btn @click="save" :loading="btnLoading"> 保存 </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <v-container>
@@ -32,6 +32,26 @@
           variant="underlined"
           density="comfortable"
         ></v-text-field>
+        <v-select
+          chips
+          multiple
+          label="设备列表"
+          :items="deviceList"
+          item-title="dev_name"
+          item-value="id"
+          v-model="formParams.devId"
+          variant="underlined"
+          density="comfortable"
+        ></v-select>
+        <v-select
+          label="数据列表"
+          :items="dataList"
+          item-title="data_label"
+          item-value="data_code"
+          v-model="formParams.dataCode"
+          variant="underlined"
+          density="comfortable"
+        ></v-select>
         <div>
           <span class="json-title">静态数据</span>
           <v-json-edit
@@ -52,10 +72,11 @@
 <script setup lang="ts">
 import VJsonEdit from "vue3-ts-jsoneditor";
 import { useDialogOpenClose } from "../../../hooks/useDialog";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { DataSourceType } from "../../../api/datasource";
 import DataSourceApi from "../../../api/datasource";
 import { SysStore } from "../../../store/modules/sys";
+import MQAPIApi from "../../../api/mysql_api";
 const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
 const emits = defineEmits(["on-save"]);
 
@@ -63,6 +84,8 @@ const formParams = reactive<Partial<DataSourceType>>({
   dsTitle: "",
   dsApiPath: "",
   dsStaticDatas: "",
+  devId: null,
+  dataCode: null,
 });
 const jsonData = ref<any>({});
 
@@ -83,6 +106,27 @@ async function save() {
     unLoading();
   }
 }
+
+const deviceList = ref<any[]>([]);
+const dataList = ref<any[]>([]);
+async function getSelectList() {
+  try {
+    const { code: c1, data: device, msg: m1 } = await MQAPIApi.getDeviceList();
+    const { code: c2, data, msg: m2 } = await MQAPIApi.getDataList();
+    if (c1 != 0 || c2 != 0) {
+      SysStore().snackOpen(c1 != 0 ? m1 : m2);
+      return;
+    }
+    dataList.value = data;
+    deviceList.value = device;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+onMounted(() => {
+  getSelectList();
+});
 </script>
 
 <style scoped lang="scss">

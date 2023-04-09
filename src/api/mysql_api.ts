@@ -13,4 +13,12 @@ export default class MQAPIApi {
     static getUrlData(params: MQAPIType): PromiseRes {
         return Request.get(`${v1}${params.url}`, params.options);
     }
+    //获取设备列表
+    static getDeviceList(): PromiseRes {
+        return Request.get(`${v1}/device/list`);
+    }
+    //获取数据列表 
+    static getDataList(): PromiseRes {
+        return Request.get(`${v1}/data/list`);
+    }
 }

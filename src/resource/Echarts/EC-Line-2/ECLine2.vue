@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { useCharts } from "../../../hooks/useCharts";
 import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
@@ -55,9 +55,8 @@ async function getData() {
       const { code, msg, data } = await MQAPIApi.getUrlData({
         url: ds.dsApiPath,
         options: {
-          dev_ids:
-            "5c6e31cf-e5d7-493a-b4f4-41741ff4c167,a46265b8-988f-40e0-85bd-af90483b041a,952ab7bc-efca-45ca-bd6d-ca4404049177",
-          data_code: "WATER_CHANGE0",
+          dev_id: ds.devId.join(","),
+          data_code: ds.dataCode,
         },
       });
       options.value = data;
@@ -111,14 +110,6 @@ function getOption() {
 onMounted(async () => {
   updateEchart(getOption());
 });
-
-// watch(
-//   () => props.data,
-//   () => {
-//     updateEchart(getOption());
-//   },
-//   { deep: true, immediate: false }
-// );
 </script>
 
 <style scoped></style>
