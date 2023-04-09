@@ -9,12 +9,12 @@
       <v-window-item value="s">样式</v-window-item>
       <v-window-item value="a">
         <v-container>
-          <InputField :list="propsList" :vModel="info.props" />
+          <InputField :list="propsList" :vModel="info" :name="'props'" />
         </v-container>
       </v-window-item>
       <v-window-item value="d">
         <v-container>
-          <InputField :list="dstlist" :vModel="info.dts" />
+          <InputField :list="dstlist" :vModel="info" :name="'dts'" />
         </v-container>
       </v-window-item>
     </v-window>

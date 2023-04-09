@@ -4,7 +4,7 @@
       v-for="item in formList"
       :key="item.id"
       :is="item.tag"
-      v-model="vModel[item.name]"
+      v-model="vModel[name][item.name]"
       v-bind="item.props"
       @click="openDsChoose(item.name)"
     />
@@ -20,9 +20,10 @@ import DiaChoseDataList from "./DiaChoseDataList.vue";
 
 const diaChoose = ref<InstanceType<typeof DiaChoseDataList>>();
 
-const { list, vModel } = defineProps<{
+const { list, vModel, name } = defineProps<{
   list: any[];
   vModel: any;
+  name: string;
 }>();
 
 const formList = reactive<any[]>([]);
@@ -55,13 +56,14 @@ function updateList() {
 }
 
 function chose(dtId: string) {
-  vModel["datasourceid"] = dtId;
+  vModel[name]["datasourceid"] = dtId;
 }
 
 function openDsChoose(elName: string) {
   if (elName != "datasourceid") return;
   diaChoose.value?.open();
 }
+
 watch(
   () => list,
   (n) => {
