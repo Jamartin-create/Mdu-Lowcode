@@ -1,5 +1,5 @@
 <template>
-  <div ref="Line2" :style="{ width: '100%', height: '200px' }"></div>
+  <div ref="Line2" :style="{ width: '100%', height: '320px' }"></div>
 </template>
 
 <script setup lang="ts">
