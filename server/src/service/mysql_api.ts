@@ -28,7 +28,6 @@ export async function getLineChartData(dev_id: string, data_code: string, start_
     }
     const value = await valueModel.findAll({ order: [['create_time', 'ASC']], where: { [Op.and]: wheres } });
     return {
-
         legend: {
             data: [data.data_label]
         },
@@ -47,12 +46,41 @@ export async function getLineChartData(dev_id: string, data_code: string, start_
 }
 
 //多设备单一字段折线图查询
-export function getMultiLineChartSql(dev_ids: string[], data_code: string, start_time?: string, end_time?: string) {
-    let sql = `select dev_id, create_time, data_value from value where dev_id in (${dev_ids.map(id => `'${id}'`).join(',')}) and data_code = '${data_code}'`;
+export async function getMultiLineChartSql(dev_ids: string[], data_code: string, start_time?: string, end_time?: string, next?: NextFunction) {
+    const data: any[] = await dataModel.findAll({ where: { data_code: data_code, dev_id: { [Op.in]: dev_ids } } });
+    if (data.length == 0) return next(ErrCode.MQ_DATA_NOT_FOUND);
+    const wheres: any[] = [{ data_id: { [Op.in]: data.map((d: any) => d.id) } }];
     if (start_time && end_time) {
-        sql += ` and create_time between '${start_time}' and '${end_time}'`;
+        wheres.push({ create_time: { $between: [start_time, end_time] } });
     }
-    return sql;
+    const value = await valueModel.findAll({ order: [['create_time', 'ASC']], where: { [Op.and]: wheres } });
+    const devices = await deviceModel.findAll({ where: { id: { [Op.in]: dev_ids } } });
+    const legend = data.map((d: any) => {
+        const device: any = devices.find((dev: any) => dev.id == d.dev_id);
+        return device.dev_name + '-' + d.data_label;
+    });
+    const set = new Set();
+    value.forEach((v: any) => {
+        const timestamp = new Date(v.create_time);
+        set.add(`${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`);
+    });
+    const xAxis = [...set];
+    const series = data.map((d: any, idx: number) => {
+        return {
+            name: legend[idx],
+            type: 'line',
+            data: value.filter((v: any) => v.data_id == d.id).map((v: any) => v.val_value)
+        }
+    });
+    return {
+        legend: {
+            data: legend
+        },
+        xAxis: {
+            data: xAxis
+        },
+        series: series
+    };
 }
 
 function getDataByCategory(categoryBy: string, dev_id: string, data_code: string, start_time?: string, end_time?: string, next?: NextFunction) {
