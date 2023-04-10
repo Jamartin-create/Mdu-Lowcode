@@ -7,6 +7,7 @@ routes.get('/dataSource/:id', DataSourceService.getDSById);
 routes.route('/dataSource')
     .get(DataSourceService.getList)
     .post(DataSourceService.saveDS)
-    .put(DataSourceService.editDS);
+    .put(DataSourceService.editDS)
+    .delete(DataSourceService.delDS);
 
 export default routes;

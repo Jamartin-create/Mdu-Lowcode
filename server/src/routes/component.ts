@@ -3,9 +3,10 @@ import ComponentService from '../service/component'
 
 const routes = Router();
 
+routes.get('/comp/table', ComponentService.getTable);
 routes.get('/comp/list', ComponentService.getList);
 routes.route('/comp')
-    .get(ComponentService.getTable)
+    .get(ComponentService.getCompById)
     .post(ComponentService.saveOne)
     .delete(ComponentService.delOne);
 

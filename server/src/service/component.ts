@@ -7,6 +7,7 @@ import { initSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
 import Engine from '../plugin/lowcode-engine/index';
+import { Props } from "../plugin/lowcode-engine/schemaTrans";
 
 const compModel = useModel('comp', CompSchema);
 
@@ -33,6 +34,20 @@ export default class ComponentService {
             res.send({ code: 0, msg: 'success', data: comps });
         } catch (e) {
             console.error(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
+
+    //根据id获取物料
+    static getCompById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { query: { compId } } = req;
+            if (!compId) return next(ErrCode.PARAM_EXCEPTION);
+            const comp = await compModel.findOne({ compId });
+            if (!comp) return next(ErrCode.COMP_NOT_FOUND_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: comp });
+        } catch (e) {
+            console.log(e);
             next(ErrCode.SELECT_MG_EXCEPTION);
         }
     }
@@ -95,6 +110,7 @@ export default class ComponentService {
     //删除物料
     static delOne = async (req: Request, res: Response, next: NextFunction) => {
         const { query: { compId } } = req;
+        console.log(compId);
         if (!compId) return next(ErrCode.PARAM_EXCEPTION);
         const session = await mongoose.connection.startSession();
         try {

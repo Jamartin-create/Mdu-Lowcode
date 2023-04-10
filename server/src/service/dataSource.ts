@@ -65,4 +65,21 @@ export default class DataSourceService {
             return next(ErrCode.SELECT_MG_EXCEPTION);
         }
     }
+
+    /**
+     * 删除数据源
+     */
+    static delDS = async (req: Request, res: Response, next: NextFunction) => {
+        const { query: { dsId } } = req;
+        if (!dsId) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const ds = await dsModel.findOne({ dsId });
+            if (!ds) return next(ErrCode.DATASOURCE_NOT_FOUND_EXCEPTION);
+            await dsModel.deleteOne({ dsId });
+            res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.error(e.message);
+            return next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
 }
