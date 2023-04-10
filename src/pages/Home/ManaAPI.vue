@@ -23,7 +23,7 @@
               <td>静态数据</td>
               <td>{{ ds.dsApiPath }}</td>
               <td>
-                <v-btn variant="text">详情</v-btn>
+                <DatasourceDetailDialog :ds-id="ds.dsId" />
                 <v-btn variant="text" @click="delOne(ds.dsId)"> 删除 </v-btn>
                 <v-btn variant="text">编辑</v-btn>
               </td>
@@ -41,6 +41,7 @@ import DataSourceApi, { DataSourceType } from "../../api/datasource";
 import { SysStore } from "../../store/modules/sys";
 import { replaceArray } from "../../utils/common";
 import DataSourceSaveDialog from "./components/DatasourceSaveDialog.vue";
+import DatasourceDetailDialog from "./components/DatasourceDetailDialog.vue";
 const dsList = reactive<DataSourceType[]>([]);
 
 async function getDsList() {
