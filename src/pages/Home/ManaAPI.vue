@@ -24,7 +24,7 @@
               <td>{{ ds.dsApiPath }}</td>
               <td>
                 <v-btn variant="text">详情</v-btn>
-                <v-btn variant="text"> 删除 </v-btn>
+                <v-btn variant="text" @click="delOne(ds.dsId)"> 删除 </v-btn>
                 <v-btn variant="text">编辑</v-btn>
               </td>
             </tr>
@@ -51,6 +51,20 @@ async function getDsList() {
       return;
     }
     replaceArray(dsList, data);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function delOne(id: string) {
+  try {
+    const { code, msg } = await DataSourceApi.delOne(id);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("成功");
+    getDsList();
   } catch (e) {
     console.error(e);
   }

@@ -17,7 +17,7 @@ export interface CompType {
 export default class CompApi {
     //查询物料列表（物料管理界面调用）
     static getCompTable(): PromiseRes {
-        return Request.get(`${v1}/comp/`)
+        return Request.get(`${v1}/comp/table`)
     }
     //查询物料列表（项目初始化时调用）
     static getCompList(): PromiseRes {
@@ -26,6 +26,10 @@ export default class CompApi {
     //查询物料配置项
     static getCompProps(id: string): PromiseRes {
         return Request.get(`${v1}/comp/options?compId=${id}`);
+    }
+    //查询物料
+    static getComp(id: string): PromiseRes {
+        return Request.get(`${v1}/comp?compId=${id}`);
     }
     //新增物料
     static saveComp(params: Partial<CompType>): PromiseRes {
@@ -37,6 +41,6 @@ export default class CompApi {
     }
     //删除物料
     static delComp(id: string): PromiseRes {
-        return Request.delete(`${v1}/comp/?compId=${id}`);
+        return Request.delete(`${v1}/comp?compId=${id}`);
     }
 }

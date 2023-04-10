@@ -25,4 +25,7 @@ export default class DataSourceApi {
     static saveOne(params: Partial<DataSourceType>): PromiseRes {
         return Request.post(`${v1}/dataSource`, params);
     }
+    static delOne(id: string): PromiseRes {
+        return Request.delete(`${v1}/dataSource?dsId=${id}`);
+    }
 }

@@ -17,15 +17,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="comp in compList" :key="comp.compId as string">
+          <tr v-for="comp in compList" :key="(comp.compId as string)">
             <td>{{ comp.compName }}</td>
             <td>{{ comp.compTitle }}</td>
             <td>{{ comp.compType }}</td>
             <td>配置项</td>
             <td>样式表</td>
-            <td>数据源</td>
+            <td>数据源配置</td>
             <td>
-              <v-btn variant="text">详情</v-btn>
+              <CompDetailDialog :compId="comp.compId!" />
               <v-btn variant="text" @click="delOne(comp.compId as string)">
                 删除
               </v-btn>
@@ -43,6 +43,7 @@ import { onMounted, reactive } from "vue";
 import { SysStore } from "../../../store/modules/sys";
 import CompEditDialog from "./CompEditDialog.vue";
 import CompApi, { CompType } from "../../../api/comp";
+import CompDetailDialog from "./CompDetailDialog.vue";
 
 const compList = reactive<CompType[]>([]);
 
@@ -57,13 +58,17 @@ async function getDataList() {
 }
 
 async function delOne(id: string) {
-  const { code, msg } = await CompApi.delComp(id);
-  if (code != 0) {
-    SysStore().snackOpen(msg);
-    return;
+  try {
+    const { code, msg } = await CompApi.delComp(id);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("成功");
+    getDataList();
+  } catch (e) {
+    console.log(e);
   }
-  SysStore().snackOpen("成功");
-  getDataList();
 }
 
 onMounted(() => {
