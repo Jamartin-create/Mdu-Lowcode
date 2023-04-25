@@ -29,7 +29,10 @@
               <v-btn variant="text" @click="delOne(comp.compId as string)">
                 删除
               </v-btn>
-              <v-btn variant="text">编辑</v-btn>
+              <CompEditDialogReal
+                :compId="comp.compId!"
+                @on-save="getDataList"
+              />
             </td>
           </tr>
         </tbody>
@@ -44,6 +47,7 @@ import { SysStore } from "../../../store/modules/sys";
 import CompEditDialog from "./CompEditDialog.vue";
 import CompApi, { CompType } from "../../../api/comp";
 import CompDetailDialog from "./CompDetailDialog.vue";
+import CompEditDialogReal from "./CompEditDialogReal.vue";
 
 const compList = reactive<CompType[]>([]);
 

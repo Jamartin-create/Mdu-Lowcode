@@ -39,6 +39,10 @@ export default class CompApi {
     static saveComp2(params: Partial<CompType>): PromiseRes {
         return Request.post(`${v1}/comp/save`, params)
     }
+    //更新物料
+    static updateComp(params: Partial<CompType>): PromiseRes {
+        return Request.put(`${v1}/comp`, params);
+    }
     //删除物料
     static delComp(id: string): PromiseRes {
         return Request.delete(`${v1}/comp?compId=${id}`);

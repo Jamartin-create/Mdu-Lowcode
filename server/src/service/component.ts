@@ -3,7 +3,7 @@ import { useModel } from '../db/mongoDB/index';
 import { Request, Response, NextFunction } from 'express';
 import { ErrCode, exceptionOnSave } from '../common/exception';
 import { guid } from '../utils/strHandler';
-import { initSchemaInfo } from "../utils/dataFilled";
+import { initSchemaInfo, updateSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
 import Engine from '../plugin/lowcode-engine/index';
@@ -105,6 +105,34 @@ export default class ComponentService {
             compDts,
             ...initSchemaInfo(getUserInfo(req).userId)
         }), res, next);
+    }
+
+    //更新物料
+    static updateOne = async (req: Request, res: Response, next: NextFunction) => {
+        const { body: { compId, compName, compTitle, compType, compProps, compStyles, compDts } } = req;
+        if (!compId || !compName || !compTitle || !compType || !compProps || !compStyles || (compType == "visualize" && !compDts)) return next(ErrCode.PARAM_EXCEPTION);
+        const session = await mongoose.connection.startSession();
+        try {
+            session.startTransaction();
+            const editParams: any = {};
+            if (compName) editParams.compName = compName;
+            if (compTitle) editParams.compTitle = compTitle;
+            if (compType) editParams.compType = compType;
+            if (compProps) editParams.compProps = compProps;
+            if (compStyles) editParams.compStyles = compStyles;
+            if (compDts) editParams.compDts = compDts;
+            await compModel.updateOne({ compId }, {
+                ...editParams,
+                ...updateSchemaInfo(getUserInfo(req).userId)
+            }).session(session);
+            await session.commitTransaction();
+            res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.EXCEUTE_EXCEPTION);
+        } finally {
+            session.endSession();
+        }
     }
 
     //删除物料

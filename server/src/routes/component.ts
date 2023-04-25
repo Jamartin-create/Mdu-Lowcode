@@ -8,6 +8,7 @@ routes.get('/comp/list', ComponentService.getList);
 routes.route('/comp')
     .get(ComponentService.getCompById)
     .post(ComponentService.saveOne)
+    .put(ComponentService.updateOne)
     .delete(ComponentService.delOne);
 
 routes.route('/comp/options')

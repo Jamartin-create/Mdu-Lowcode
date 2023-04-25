@@ -75,6 +75,10 @@ import { reactive } from "vue";
 import { useDict } from "../../../hooks/useDict";
 import { SysStore } from "../../../store/modules/sys";
 
+const props = defineProps<{
+  formList: any[];
+}>();
+
 const { dictEntryList, getDictEntryByCode, dictTypeInfo, getType } = useDict();
 getDictEntryByCode("INPUT_TYPE");
 getType();
@@ -88,12 +92,13 @@ type FormInfo = {
 };
 
 let curIdx = 1;
-const formList = reactive<FormInfo[]>([]);
+const formList = reactive<FormInfo[]>(
+  props.formList?.length > 0 ? JSON.parse(JSON.stringify(props.formList)) : []
+);
 
 function addNewOne() {
   if (formList.length > 0) {
-    const { id, name, text, type, selectGroup } = formList[formList.length - 1];
-    if (!id || !name || !text || !type || (type == "select" && !selectGroup)) {
+    if (!checkFormListitem(formList[formList.length - 1])) {
       SysStore().snackOpen("请完整填写最新配置项");
       return;
     }
@@ -107,12 +112,33 @@ function addNewOne() {
   });
 }
 
+//checkFormListItem
+function checkFormListitem(item: FormInfo): boolean {
+  const { id, name, text, type, selectGroup } = item;
+  if (!id || !name || !text || !type || (type == "select" && !selectGroup)) {
+    return false;
+  }
+  return true;
+}
+
+//setFormList
+function setFormList(list: FormInfo[]) {
+  formList.splice(0, formList.length, ...list);
+}
+
+//getFormList
+function getFormList() {
+  return formList.filter((item) => checkFormListitem(item));
+}
+
 function delOne(id: number) {
   formList.splice(id, 1);
 }
 
 defineExpose({
   formList,
+  getFormList,
+  setFormList,
 });
 
 addNewOne();
