@@ -28,7 +28,7 @@
                 详情
               </v-btn>
               <v-btn variant="text" @click="delDict(dict.sgtId)">删除</v-btn>
-              <v-btn variant="text">编辑</v-btn>
+              <DictTypeEditDialog :sgt-id="dict.sgtId" @on-save="getList" />
             </td>
           </tr>
         </tbody>
@@ -44,6 +44,8 @@ import { SysStore } from "../../../store/modules/sys";
 import DictApi, { DictType } from "../../../api/dict";
 import DictEntryTableDialog from "./DictEntryTableDialog.vue";
 import DictSaveDialog from "./DictSaveDialog.vue";
+import DictTypeEditDialog from "./DictTypeEditDialog.vue";
+
 import { useDialogOpenClose } from "../../../hooks/useDialog";
 const sysPinia = SysStore();
 

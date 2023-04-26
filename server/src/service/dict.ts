@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ErrCode, exceptionOnSave } from '../common/exception';
 import { useModel } from '../db/mongoDB/index';
 import { guid } from '../utils/strHandler';
-import { initSchemaInfo } from '../utils/dataFilled';
+import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
 import { SelectGroupType } from '../db/mongoDB/schema/schemaType';
@@ -61,6 +61,31 @@ export default class DictService {
             next(ErrCode.SELECT_MG_EXCEPTION);
         } finally {
             session.endSession();
+        }
+    }
+
+    //更新字典Type
+    static updateDict = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { body: { sgtCode, sgtName, sgtId } } = req;
+            if (!sgtId) return next(ErrCode.PARAM_EXCEPTION);
+            if (!sgtCode && !sgtName) return res.send({ code: 0, msg: 'success' });
+            const sgt = await SgtModel.findOne({ sgtId });
+            if (!sgt) return next(ErrCode.DICT_TYPE_NOT_FOUND_EXCEPTION);
+            const newOptions: {
+                sgtCode?: string,
+                sgtName?: string,
+            } = {}
+            sgtCode && (newOptions['sgtCode'] = sgtCode)
+            sgtName && (newOptions['sgtName'] = sgtName)
+            await SgtModel.updateOne({ sgtId }, {
+                ...newOptions,
+                ...updateSchemaInfo(getUserInfo(req).userId),
+            })
+            res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
         }
     }
 

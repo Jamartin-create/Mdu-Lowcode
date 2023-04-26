@@ -48,7 +48,7 @@ export default class DataSourceService {
      * @returns 
      */
     static editDS = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { dsStaticDatas, dsApiPath, dsPath, dsId } } = req;
+        const { body: { dsStaticDatas, dsApiPath, dsPath, dsId, devId, dataCode } } = req;
         if (!dsStaticDatas && !dsApiPath && !dsPath) return next(ErrCode.PARAM_EXCEPTION);
         const [dataSource] = await dsModel.find({ dsId });
         if (!dataSource) return next(ErrCode.DATASOURCE_NOT_FOUND_EXCEPTION);
@@ -57,6 +57,8 @@ export default class DataSourceService {
                 dsStaticDatas: dataSource.dsStaticDatas.concat(dsStaticDatas) || dataSource.dsStaticDatas,
                 dsApiPath: dsApiPath || dataSource.dsApiPath,
                 dsPath: dsPath || dataSource.dsPath,
+                devId: devId || dataSource.devId,
+                dataCode: dataCode || dataSource.dataCode,
                 ...updateSchemaInfo(getUserInfo(req).userId)
             });
             res.send({ code: 0, msg: 'success' });

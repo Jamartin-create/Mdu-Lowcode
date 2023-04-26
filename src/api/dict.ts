@@ -24,7 +24,7 @@ export default class DictApi {
         return Request.post(`${v1}/dict/type`, params);
     }
     //查询字典Type
-    static getDictType(params?: Pick<DictType, 'sgtCode' | 'sgtId'>): PromiseRes {
+    static getDictType(params?: Partial<Pick<DictType, 'sgtCode' | 'sgtId'>>): PromiseRes {
         let qs = '';
         if (params) {
             qs += '?' + (params.sgtCode ? `sgtCode=${params.sgtCode}` : '') + (params.sgtId ? `sgtId=${params.sgtId}` : '')
@@ -34,6 +34,10 @@ export default class DictApi {
     //删除字典
     static delDictType(sgtId: string): PromiseRes {
         return Request.delete(`${v1}/dict/type?sgtId=${sgtId}`);
+    }
+    //更新字典Type
+    static updateDictType(params: Partial<DictType>): PromiseRes {
+        return Request.put(`${v1}/dict/type`, params);
     }
     //新增字典Entry
     static saveDictEntry(params: Partial<DictEntry>): PromiseRes {

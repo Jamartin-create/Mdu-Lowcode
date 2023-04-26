@@ -25,7 +25,7 @@
               <td>
                 <DatasourceDetailDialog :ds-id="ds.dsId" />
                 <v-btn variant="text" @click="delOne(ds.dsId)"> 删除 </v-btn>
-                <v-btn variant="text">编辑</v-btn>
+                <DatasourceEditDialog @on-save="getDsList" :ds-id="ds.dsId" />
               </td>
             </tr>
           </tbody>
@@ -36,12 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref, provide, onMounted } from "vue";
 import DataSourceApi, { DataSourceType } from "../../api/datasource";
 import { SysStore } from "../../store/modules/sys";
 import { replaceArray } from "../../utils/common";
 import DataSourceSaveDialog from "./components/DatasourceSaveDialog.vue";
 import DatasourceDetailDialog from "./components/DatasourceDetailDialog.vue";
+import DatasourceEditDialog from "./components/DatasourceEditDialog.vue";
+import MQAPIApi from "../../api/mysql_api";
 const dsList = reactive<DataSourceType[]>([]);
 
 async function getDsList() {
@@ -71,7 +73,31 @@ async function delOne(id: string) {
   }
 }
 
-getDsList();
+//获取设备以及监测字段列表
+const deviceList = ref<any[]>([]);
+const dataList = ref<any[]>([]);
+async function getSelectList() {
+  try {
+    const { code: c1, data: device, msg: m1 } = await MQAPIApi.getDeviceList();
+    const { code: c2, data, msg: m2 } = await MQAPIApi.getDataList();
+    console.log(device, data);
+    if (c1 != 0 || c2 != 0) {
+      SysStore().snackOpen(c1 != 0 ? m1 : m2);
+      return;
+    }
+    dataList.value = data;
+    deviceList.value = device;
+  } catch (e) {
+    console.error(e);
+  }
+}
+provide("deviceList", deviceList);
+provide("dataList", dataList);
+
+onMounted(() => {
+  getDsList();
+  getSelectList();
+});
 </script>
 
 <style scoped></style>

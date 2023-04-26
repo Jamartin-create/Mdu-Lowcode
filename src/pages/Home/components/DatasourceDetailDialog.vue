@@ -35,17 +35,17 @@
               <v-col cols="3">监测数据字段：</v-col>
               <v-col>{{ dsInfo.dataCode }}</v-col>
             </v-row>
-            <v-row>
+            <v-row v-if="dsInfo.dsStaticDatas">
               <v-col cols="3">静态数据：</v-col>
               <v-col>
                 <v-json-edit
                   class="json-edit"
                   height="150"
-                  readOnly
                   :mainMenuBar="false"
                   :statusBar="false"
                   :navigationBar="false"
                   mode="text"
+                  readOnly
                   v-model="dsInfo.dsStaticDatas"
                 />
               </v-col>
@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { useDialogOpenClose } from "../../../hooks/useDialog";
-import { watch, ref } from "vue";
+import { watch, ref, onMounted } from "vue";
 import VJsonEdit from "vue3-ts-jsoneditor";
 import { SysStore } from "../../../store/modules/sys";
 import DataSourceApi from "../../../api/datasource";
@@ -79,7 +79,6 @@ async function getDsDetail() {
       SysStore().snackOpen(msg);
       return;
     }
-    console.log(data);
     dsInfo.value = data;
   } catch (e) {
     console.error(e);
@@ -90,7 +89,7 @@ async function getDsDetail() {
 
 watch(
   () => vis.value,
-  (val) => val && getDsDetail()
+  (n) => n && getDsDetail()
 );
 </script>
 

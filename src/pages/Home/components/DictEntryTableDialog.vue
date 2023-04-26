@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="vis" persistent width="800px">
+  <v-dialog v-model="vis" persistent width="500px">
     <v-card>
       <v-card-title>字典入口</v-card-title>
       <v-card-actions>
@@ -13,7 +13,6 @@
         <v-table :density="'comfortable'">
           <thead>
             <tr>
-              <th class="text-left">入口Id</th>
               <th class="text-left">入口名称</th>
               <th class="text-left">入口编号</th>
               <th class="text-left">入口值</th>
@@ -21,7 +20,6 @@
           </thead>
           <tbody>
             <tr v-for="entry in dictEntryList" :key="entry.sgeId">
-              <td>{{ entry.sgeId }}</td>
               <td>{{ entry.sgeName }}</td>
               <td>{{ entry.sgeCode }}</td>
               <td>{{ entry.sgeValue }}</td>

@@ -6,14 +6,14 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ props }">
-      <v-btn variant="tonal" v-bind="props">新增</v-btn>
+      <v-btn variant="text" v-bind="props">编辑</v-btn>
     </template>
     <v-card>
       <v-toolbar dark>
         <v-btn icon dark @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>新增数据源</v-toolbar-title>
+        <v-toolbar-title>编辑数据源</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn @click="save" :loading="btnLoading"> 保存 </v-btn>
@@ -72,12 +72,15 @@
 <script setup lang="ts">
 import VJsonEdit from "vue3-ts-jsoneditor";
 import { useDialogOpenClose } from "../../../hooks/useDialog";
-import { ref, reactive, inject } from "vue";
+import { ref, reactive, onMounted, watch, inject } from "vue";
 import { DataSourceType } from "../../../api/datasource";
 import DataSourceApi from "../../../api/datasource";
 import { SysStore } from "../../../store/modules/sys";
 const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
 const emits = defineEmits(["on-save"]);
+const props = defineProps<{
+  dsId: string;
+}>();
 
 const formParams = reactive<Partial<DataSourceType>>({
   dsTitle: "",
@@ -88,11 +91,35 @@ const formParams = reactive<Partial<DataSourceType>>({
 });
 const jsonData = ref<any>({});
 
+//获取数据源信息
+async function getDsInfo() {
+  loading();
+  try {
+    const { code, msg, data } = await DataSourceApi.getOneById(props.dsId);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    const stDs = data.dsStaticDatas;
+    stDs &&
+      (jsonData.value = typeof stDs == "string" ? JSON.parse(stDs) : stDs);
+    console.log(formParams, data);
+    Object.keys(formParams).forEach((key) => {
+      data[key] && (formParams[key as keyof typeof formParams] = data[key]);
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    unLoading();
+  }
+}
+
+//保存数据源
 async function save() {
   loading();
   try {
     formParams.dsStaticDatas = JSON.parse(jsonData.value);
-    const { code, msg } = await DataSourceApi.saveOne(formParams);
+    const { code, msg } = await DataSourceApi.updateOne(formParams);
     if (code != 0) {
       SysStore().snackOpen(msg);
       return;
@@ -106,8 +133,13 @@ async function save() {
   }
 }
 
+//获取设备以及监测字段列表
 const deviceList: any[] = inject("deviceList")!;
 const dataList: any[] = inject("dataList")!;
+
+onMounted(() => {
+  getDsInfo();
+});
 </script>
 
 <style scoped lang="scss">
