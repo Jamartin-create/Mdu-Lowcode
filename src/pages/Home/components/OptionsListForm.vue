@@ -76,7 +76,7 @@ import { useDict } from "../../../hooks/useDict";
 import { SysStore } from "../../../store/modules/sys";
 
 const props = defineProps<{
-  formList: any[];
+  formList?: any[];
 }>();
 
 const { dictEntryList, getDictEntryByCode, dictTypeInfo, getType } = useDict();
@@ -93,7 +93,11 @@ type FormInfo = {
 
 let curIdx = 1;
 const formList = reactive<FormInfo[]>(
-  props.formList?.length > 0 ? JSON.parse(JSON.stringify(props.formList)) : []
+  !props.formList
+    ? []
+    : props.formList?.length > 0
+    ? JSON.parse(JSON.stringify(props.formList))
+    : []
 );
 
 function addNewOne() {

@@ -27,7 +27,7 @@
               >
                 详情
               </v-btn>
-              <v-btn variant="text" @click="delDict(dict.sgtId)">删除</v-btn>
+              <DeleteConfirm @confirm="delDict(dict.sgtId)" />
               <DictTypeEditDialog :sgt-id="dict.sgtId" @on-save="getList" />
             </td>
           </tr>
@@ -45,6 +45,7 @@ import DictApi, { DictType } from "../../../api/dict";
 import DictEntryTableDialog from "./DictEntryTableDialog.vue";
 import DictSaveDialog from "./DictSaveDialog.vue";
 import DictTypeEditDialog from "./DictTypeEditDialog.vue";
+import DeleteConfirm from "../../../components/DialogComponents/DeleteConfirm.vue";
 
 import { useDialogOpenClose } from "../../../hooks/useDialog";
 const sysPinia = SysStore();
@@ -54,13 +55,17 @@ const { btnLoading, unLoading, loading } = useDialogOpenClose();
 const dictList = reactive<DictType[]>([]);
 
 async function getList() {
-  const { code, data, msg } = await DictApi.getDictType();
-  if (code != 0) {
-    sysPinia.snackOpen(msg);
-    return;
+  try {
+    const { code, data, msg } = await DictApi.getDictType();
+    if (code != 0) {
+      sysPinia.snackOpen(msg);
+      return;
+    }
+    dictList.splice(0, dictList.length);
+    Array.prototype.push.apply(dictList, data);
+  } catch (e) {
+    console.error(e);
   }
-  dictList.splice(0, dictList.length);
-  Array.prototype.push.apply(dictList, data);
 }
 
 async function delDict(id: string) {

@@ -24,7 +24,7 @@
               <td>{{ ds.dsApiPath }}</td>
               <td>
                 <DatasourceDetailDialog :ds-id="ds.dsId" />
-                <v-btn variant="text" @click="delOne(ds.dsId)"> 删除 </v-btn>
+                <DeleteConfirm @confirm="delOne(ds.dsId)" />
                 <DatasourceEditDialog @on-save="getDsList" :ds-id="ds.dsId" />
               </td>
             </tr>
@@ -43,6 +43,7 @@ import { replaceArray } from "../../utils/common";
 import DataSourceSaveDialog from "./components/DatasourceSaveDialog.vue";
 import DatasourceDetailDialog from "./components/DatasourceDetailDialog.vue";
 import DatasourceEditDialog from "./components/DatasourceEditDialog.vue";
+import DeleteConfirm from "../../components/DialogComponents/DeleteConfirm.vue";
 import MQAPIApi from "../../api/mysql_api";
 const dsList = reactive<DataSourceType[]>([]);
 

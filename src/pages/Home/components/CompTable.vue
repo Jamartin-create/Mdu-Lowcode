@@ -26,9 +26,7 @@
             <td>数据源配置</td>
             <td>
               <CompDetailDialog :compId="comp.compId!" />
-              <v-btn variant="text" @click="delOne(comp.compId as string)">
-                删除
-              </v-btn>
+              <DeleteConfirm @confirm="delOne(comp.compId as string)" />
               <CompEditDialogReal
                 :compId="comp.compId!"
                 @on-save="getDataList"
@@ -48,17 +46,22 @@ import CompEditDialog from "./CompEditDialog.vue";
 import CompApi, { CompType } from "../../../api/comp";
 import CompDetailDialog from "./CompDetailDialog.vue";
 import CompEditDialogReal from "./CompEditDialogReal.vue";
+import DeleteConfirm from "../../../components/DialogComponents/DeleteConfirm.vue";
 
 const compList = reactive<CompType[]>([]);
 
 async function getDataList() {
-  const { code, msg, data } = await CompApi.getCompTable();
-  if (code != 0) {
-    SysStore().snackOpen(msg);
-    return;
+  try {
+    const { code, msg, data } = await CompApi.getCompTable();
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    compList.splice(0, compList.length);
+    Array.prototype.push.apply(compList, data);
+  } catch (e) {
+    console.error(e);
   }
-  compList.splice(0, compList.length);
-  Array.prototype.push.apply(compList, data);
 }
 
 async function delOne(id: string) {

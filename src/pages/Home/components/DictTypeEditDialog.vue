@@ -78,22 +78,28 @@ const reqParam = reactive<Partial<DictType>>({
   sgtCode: "",
   sgtName: "",
 });
+
 //获取字典类型信息
 async function getDictType() {
-  const {
-    msg,
-    code,
-    data: [dictType],
-  } = await DictApi.getDictType({
-    sgtId: props.sgtId,
-  });
-  if (code != 0) {
-    SysStore().snackOpen(msg);
-    return;
+  try {
+    const {
+      msg,
+      code,
+      data: [dictType],
+    } = await DictApi.getDictType({
+      sgtId: props.sgtId,
+    });
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    reqParam.sgtCode = dictType.sgtCode;
+    reqParam.sgtName = dictType.sgtName;
+  } catch (e) {
+    console.error(e);
   }
-  reqParam.sgtCode = dictType.sgtCode;
-  reqParam.sgtName = dictType.sgtName;
 }
+
 //保存字典更新信息
 async function save() {
   btnLoading.value = true;

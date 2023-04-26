@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="vis"
-    :scrim="false"
-    width="1200px"
-    transition="dialog-bottom-transition"
-  >
+  <v-dialog v-model="vis" width="1200px" transition="dialog-bottom-transition">
     <v-card>
       <v-toolbar dark>
         <v-btn icon dark @click="close">

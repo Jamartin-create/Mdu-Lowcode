@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="vis"
-    :scrim="false"
-    width="1000px"
-    transition="dialog-bottom-transition"
-  >
+  <v-dialog v-model="vis" width="1000px" transition="dialog-bottom-transition">
     <template v-slot:activator="{ props }">
       <v-btn variant="text" v-bind="props">编辑</v-btn>
     </template>
