@@ -78,8 +78,7 @@
 <script setup lang="ts">
 import OptionsListForm from "./OptionsListForm.vue";
 import { useDialogOpenClose, useFormBase } from "../../../hooks/useDialog";
-import { reactive, ref, watch } from "vue";
-import { useDict } from "../../../hooks/useDict";
+import { reactive, ref, watch, inject } from "vue";
 import { CompType } from "../../../api/comp";
 import { SysStore } from "../../../store/modules/sys";
 import CompApi from "../../../api/comp";
@@ -89,8 +88,7 @@ const { vis, close, btnLoading, loading, unLoading } = useDialogOpenClose();
 const { reset } = useFormBase();
 
 const emits = defineEmits(["on-save"]);
-const { dictEntryList, getDictEntryByCode } = useDict();
-getDictEntryByCode("COMP_TYPE");
+const dictEntryList = inject("dictEntryList", ref([]));
 
 const dsChoseDia = ref<InstanceType<typeof DatasourceChoseDialog>>();
 const propsList = ref<InstanceType<typeof OptionsListForm>>();

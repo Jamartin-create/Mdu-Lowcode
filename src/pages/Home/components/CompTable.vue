@@ -40,13 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, provide } from "vue";
 import { SysStore } from "../../../store/modules/sys";
 import CompEditDialog from "./CompEditDialog.vue";
 import CompApi, { CompType } from "../../../api/comp";
 import CompDetailDialog from "./CompDetailDialog.vue";
 import CompEditDialogReal from "./CompEditDialogReal.vue";
 import DeleteConfirm from "../../../components/DialogComponents/DeleteConfirm.vue";
+import { useDict } from "../../../hooks/useDict";
 
 const compList = reactive<CompType[]>([]);
 
@@ -78,8 +79,12 @@ async function delOne(id: string) {
   }
 }
 
-onMounted(() => {
-  getDataList();
+const { dictEntryList, getDictEntryByCode } = useDict();
+provide("dictEntryList", dictEntryList);
+
+onMounted(async () => {
+  await getDataList();
+  await getDictEntryByCode("COMP_TYPE");
 });
 </script>
 

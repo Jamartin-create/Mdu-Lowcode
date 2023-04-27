@@ -9,7 +9,15 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn variant="text" @click="close"> 取消 </v-btn>
-        <v-btn variant="text" @click="emits('confirm')"> 确认 </v-btn>
+        <v-btn
+          variant="text"
+          @click="
+            close();
+            emits('confirm');
+          "
+        >
+          确认
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
