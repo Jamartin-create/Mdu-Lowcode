@@ -3,11 +3,10 @@
     <div class="item-wrapper">
       <ItemCard
         v-for="item in itemList"
+        :options="item"
         :key="item.itemId"
-        :title="item.itemTitle"
-        :description="item.itemDscription"
-        :item-id="item.itemId"
         @to-editor="toEditor"
+        @on-del="getList"
       />
       <v-card>
         <v-card-title>ITEM</v-card-title>
@@ -23,7 +22,7 @@
 <script setup lang="ts">
 import ItemApi from "../../api/item";
 import ItemCard from "./components/ItemCard.vue";
-import { reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { SysStore } from "../../store/modules/sys";
 type RouterParams = {
@@ -33,7 +32,7 @@ type RouterParams = {
   query?: any;
 };
 const router = useRouter();
-const itemList = reactive<any[]>([]);
+const itemList = ref<any[]>([]);
 async function getList() {
   try {
     const { data, code, msg } = await ItemApi.getAllItem();
@@ -41,7 +40,7 @@ async function getList() {
       SysStore().snackOpen(msg);
       return;
     }
-    Array.prototype.push.apply(itemList, data);
+    itemList.value = data;
   } catch (e) {
     console.error(e);
   }

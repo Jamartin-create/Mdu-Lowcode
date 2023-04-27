@@ -23,4 +23,13 @@ export default class ItemApi {
     static saveItem(params: Partial<ItemType>): PromiseRes {
         return Request.post(`${v1}/item/`, params);
     }
+    static lockItem(id: string): PromiseRes {
+        return Request.put(`${v1}/item/`, { itemId: id, itemPublic: false });
+    }
+    static unLockItem(id: string): PromiseRes {
+        return Request.put(`${v1}/item/`, { itemId: id, itemPublic: true });
+    }
+    static delItem(id: string): PromiseRes {
+        return Request.delete(`${v1}/item/?itemId=${id}`);
+    }
 }
