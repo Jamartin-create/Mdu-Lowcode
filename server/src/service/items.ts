@@ -8,7 +8,7 @@ import { guid } from '../utils/strHandler';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 import { getGROUP_BYID } from "./group";
 
-const ItemModel = useModel('item', ItemSchema);
+export const ItemModel = useModel('item', ItemSchema);
 
 /**
  * 项目基础信息填充
@@ -31,7 +31,7 @@ export default class ItemService {
     //获取已发布的项目列表
     static getPublishList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const ret = await ItemModel.find({ 'itemPublic': true });
+            const ret = await ItemModel.find({ 'itemPublic': true }, {}, { sort: { createTime: -1 } });
             res.send({ code: 0, msg: 'success', data: ret });
         } catch (e) {
             console.error(e);
@@ -41,7 +41,7 @@ export default class ItemService {
     //查询列表
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         const user = getUserInfo(req);
-        const ret = await ItemModel.find({ 'userId': user.userId });
+        const ret = await ItemModel.find({ 'userId': user.userId }, {}, { sort: { createTime: -1 } });
         res.send({ code: 0, msg: 'success', data: ret });
     }
 

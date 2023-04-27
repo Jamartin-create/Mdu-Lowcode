@@ -5,8 +5,9 @@ import { GroupSchema } from '../db/mongoDB/schema/business';
 import { useModel } from '../db/mongoDB/index';
 import { guid } from '../utils/strHandler';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
+import { ItemModel } from './items';
 
-const groupModel = useModel('group', GroupSchema);
+export const groupModel = useModel('group', GroupSchema);
 
 export async function getGROUP_BYID(id: string) {
     try {
@@ -18,6 +19,21 @@ export async function getGROUP_BYID(id: string) {
 }
 
 export default class GroupService {
+    //根据项目id获取组件组
+    static getGroupByItemId = async (req: Request, res: Response, next: NextFunction) => {
+        const { query: { itemId } } = req;
+        if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const item = await ItemModel.findOne({ "itemId": itemId });
+            if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
+            const group = await getGROUP_BYID(item.groupId);
+            if (!group) return next(ErrCode.GROUP_NOT_FOUD_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: group });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
     //根据id获取组件组
     static getGroupById = async (req: Request, res: Response, next: NextFunction) => {
         const { query: { groupId } } = req;
