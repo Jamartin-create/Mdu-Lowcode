@@ -1,7 +1,13 @@
 <template>
   <v-dialog v-model="vis" persistent width="auto">
     <template v-slot:activator="{ props }">
-      <v-btn variant="text" v-bind="props">删除</v-btn>
+      <v-btn
+        v-bind="{
+          ...props,
+          ...options,
+        }"
+        >删除</v-btn
+      >
     </template>
     <v-card>
       <v-card-title class="text-h5">提示</v-card-title>
@@ -28,6 +34,21 @@ import { useDialogOpenClose } from "../../hooks/useDialog";
 const { vis, close } = useDialogOpenClose();
 
 const emits = defineEmits(["confirm"]);
+
+const options = withDefaults(
+  defineProps<{
+    color: string;
+    size: string;
+    variant: string;
+    class: string;
+  }>(),
+  {
+    color: "",
+    variant: "text",
+    size: "default",
+    class: "",
+  }
+);
 </script>
 
 <style scoped></style>

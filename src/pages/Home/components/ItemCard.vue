@@ -14,10 +14,23 @@
       {{ options.itemDescription || "暂无描述" }}
     </v-card-subtitle>
     <v-card-actions>
+      <v-btn
+        variant="tonal"
+        size="small"
+        @click="previewItem(options.itemId as string)"
+      >
+        预览
+      </v-btn>
       <v-btn variant="tonal" size="small" @click="choseItem">
         {{ options.itemId != null ? "编辑" : "新增" }}
       </v-btn>
-      <DeleteConfirm @confirm="delItem" />
+      <DeleteConfirm
+        class="text-white"
+        color="red"
+        variant="elevated"
+        size="small"
+        @confirm="delItem"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -27,6 +40,9 @@ import DeleteConfirm from "../../../components/DialogComponents/DeleteConfirm.vu
 import { ItemStore } from "../../../store/modules/item";
 import ItemApi from "../../../api/item";
 import { SysStore } from "../../../store/modules/sys";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const itemPinia = ItemStore();
 
@@ -41,7 +57,9 @@ async function choseItem() {
   await itemPinia.choseOneItem(options.itemId!);
   emits("toEditor");
 }
-
+function previewItem(itemId: string) {
+  window.open(router.resolve({ path: "/preview", query: { itemId } }).href);
+}
 async function delItem() {
   try {
     const { code, msg } = await ItemApi.delItem(options.itemId);
@@ -62,11 +80,12 @@ async function delItem() {
   &::after {
     content: "未发布";
     position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #b2b2b2;
-    font-size: 22px;
+    right: 0;
+    top: 0;
+    color: #dfdfdf;
+    font-size: 30px;
+    font-weight: bold;
+    z-index: -1;
   }
 }
 .item-bg.pub {
