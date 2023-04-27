@@ -28,6 +28,16 @@ function fillItemInfo(uid: string, groupId: string): Partial<Item> {
 }
 
 export default class ItemService {
+    //获取已发布的项目列表
+    static getPublishList = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const ret = await ItemModel.find({ 'itemPublic': true });
+            res.send({ code: 0, msg: 'success', data: ret });
+        } catch (e) {
+            console.error(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
     //查询列表
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         const user = getUserInfo(req);
@@ -78,7 +88,7 @@ export default class ItemService {
             await ItemModel.updateOne({ itemId }, {
                 itemTitle: itemTitle || item.itemTitle,
                 itemDescription: itemDescription || item.itemDescription,
-                itemPublic: itemPublic || item.itemPublic,
+                itemPublic: typeof itemPublic != 'boolean' ? item.itemPublic : itemPublic,
                 itemPublicPage: itemPublicPage || item.itemPublicPage,
                 ...updateSchemaInfo(getUserInfo(req).userId)
             })
@@ -91,9 +101,9 @@ export default class ItemService {
 
     //删除
     static delItem = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { itemId } } = req;
+        const { query: { itemId } } = req;
         if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
-        const [item] = await ItemModel.find({ itemId });
+        const item = await ItemModel.findOne({ itemId });
         if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
         try {
             await ItemModel.deleteOne({ itemId });
