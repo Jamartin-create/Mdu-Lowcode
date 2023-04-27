@@ -20,6 +20,9 @@ export default class ItemApi {
     static getItemById(id: string): PromiseRes {
         return Request.get(`${v1}/item/${id}`)
     }
+    static getPubItem(): PromiseRes {
+        return Request.get(`${v1}/item/publish`);
+    }
     static saveItem(params: Partial<ItemType>): PromiseRes {
         return Request.post(`${v1}/item/`, params);
     }

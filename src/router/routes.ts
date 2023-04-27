@@ -53,4 +53,10 @@ export default [
         component: () => import('../pages/DataSource/index.vue'),
         meta: {},
     },
+    {
+        path: '/preview',
+        name: 'preview',
+        component: () => import('../pages/Preview/index.vue'),
+        meta: {}
+    },
 ]

@@ -19,6 +19,10 @@ export default class GroupApi {
     static getGroup(groupId: string): PromiseRes {
         return Request.get(`${v1}/group/${groupId}`);
     }
+    //查询物料组
+    static getGroupByItemId(itemId: string): PromiseRes {
+        return Request.get(`${v1}/group/getBy/itemId?itemId=${itemId}`);
+    }
     //保存物料组
     static saveGroup(params: Partial<GroupType>): PromiseRes {
         return Request.post(`${v1}/group`, params);
