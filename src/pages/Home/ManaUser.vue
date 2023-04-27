@@ -9,11 +9,18 @@
         @on-del="getList"
       />
       <v-card>
-        <v-card-title>ITEM</v-card-title>
-        <v-card-subtitle> 暂时没有更多了 </v-card-subtitle>
-        <v-card-actions>
-          <v-btn variant="text" @click="toEditor()"> 新增 </v-btn>
-        </v-card-actions>
+        <v-container style="height: 100%">
+          <v-row style="height: 100%; margin: 0">
+            <v-col>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn variant="text" @click="toEditor()" icon="mdi-plus">
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
     </div>
   </v-app>
