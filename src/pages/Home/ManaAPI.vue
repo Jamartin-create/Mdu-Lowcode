@@ -81,7 +81,6 @@ async function getSelectList() {
   try {
     const { code: c1, data: device, msg: m1 } = await MQAPIApi.getDeviceList();
     const { code: c2, data, msg: m2 } = await MQAPIApi.getDataList();
-    console.log(device, data);
     if (c1 != 0 || c2 != 0) {
       SysStore().snackOpen(c1 != 0 ? m1 : m2);
       return;

@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <component
-      v-for="item in formList"
-      :key="item.id"
+      v-for="(item, idx) in formList"
+      :key="idx"
       :is="item.tag"
       v-model="vModel[name][item.name]"
       v-bind="item.props"

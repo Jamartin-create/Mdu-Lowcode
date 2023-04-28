@@ -7,7 +7,7 @@ import { User } from '../db/mongoDB/schema/schemaType';
 import { sign, getUserInfo } from '../utils/auth';
 import { initSchemaInfo } from '../utils/dataFilled';
 
-const UserModel = useModel('user', UserSchema);
+export const UserModel = useModel('user', UserSchema);
 
 function fillUserInfo(): Partial<User> {
     const uid = guid();

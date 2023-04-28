@@ -50,7 +50,6 @@ type Props = {
   options: any;
 };
 const { options } = defineProps<Props>();
-console.log(options);
 const emits = defineEmits(["toEditor", "on-del"]);
 
 async function choseItem() {

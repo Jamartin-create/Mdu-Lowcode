@@ -65,6 +65,7 @@ async function getProps(id: string) {
     replaceArray(propsList, data.props);
     replaceArray(stylesList, data.styles);
     compType.value = data.type;
+    dstlist.splice(0, dstlist.length);
     if (data.type == "visual") {
       replaceArray(dstlist, data.dts);
     }

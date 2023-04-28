@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import VJsonEdit from "vue3-ts-jsoneditor";
 import { useDialogOpenClose } from "../../../hooks/useDialog";
-import { ref, reactive, onMounted, watch, inject } from "vue";
+import { ref, reactive, onMounted, inject } from "vue";
 import { DataSourceType } from "../../../api/datasource";
 import DataSourceApi from "../../../api/datasource";
 import { SysStore } from "../../../store/modules/sys";
@@ -98,7 +98,6 @@ async function getDsInfo() {
     const stDs = data.dsStaticDatas;
     stDs &&
       (jsonData.value = typeof stDs == "string" ? JSON.parse(stDs) : stDs);
-    console.log(formParams, data);
     Object.keys(formParams).forEach((key) => {
       data[key] && (formParams[key as keyof typeof formParams] = data[key]);
     });
@@ -114,7 +113,10 @@ async function save() {
   loading();
   try {
     formParams.dsStaticDatas = JSON.parse(jsonData.value);
-    const { code, msg } = await DataSourceApi.updateOne(formParams);
+    const { code, msg } = await DataSourceApi.updateOne({
+      ...formParams,
+      dsId: props.dsId,
+    });
     if (code != 0) {
       SysStore().snackOpen(msg);
       return;
