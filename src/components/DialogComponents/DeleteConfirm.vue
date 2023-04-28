@@ -37,10 +37,10 @@ const emits = defineEmits(["confirm"]);
 
 const options = withDefaults(
   defineProps<{
-    color: string;
-    size: string;
-    variant: string;
-    class: string;
+    color?: string;
+    size?: string;
+    variant?: string;
+    class?: string;
   }>(),
   {
     color: "",

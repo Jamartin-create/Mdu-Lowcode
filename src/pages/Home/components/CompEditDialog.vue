@@ -8,7 +8,10 @@
         <v-btn icon dark @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>新增物料</v-toolbar-title>
+        <v-toolbar-title>
+          新增物料
+          <CompSaveHelpDoc />
+        </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn :loading="btnLoading" variant="text" @click="save">
@@ -91,6 +94,7 @@ import { CompType } from "../../../api/comp";
 import { SysStore } from "../../../store/modules/sys";
 import CompApi from "../../../api/comp";
 import DatasourceChoseDialog from "./DatasourceChoseDialog.vue";
+import CompSaveHelpDoc from "./CompSaveHelpDoc.vue";
 
 const emits = defineEmits(["on-save"]);
 const dictEntryList: Ref = inject("dictEntryList", ref([]));
