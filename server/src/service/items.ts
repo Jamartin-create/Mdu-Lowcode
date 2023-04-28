@@ -7,6 +7,7 @@ import { Item } from '../db/mongoDB/schema/schemaType';
 import { guid } from '../utils/strHandler';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
 import { getGROUP_BYID } from "./group";
+import { UserModel } from "./user";
 
 export const ItemModel = useModel('item', ItemSchema);
 
@@ -31,8 +32,26 @@ export default class ItemService {
     //获取已发布的项目列表
     static getPublishList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const ret = await ItemModel.find({ 'itemPublic': true }, {}, { sort: { createTime: -1 } });
-            res.send({ code: 0, msg: 'success', data: ret });
+            const ret: any[] = await ItemModel.find({ 'itemPublic': true }, {}, { sort: { createTime: -1 } });
+            Promise.all(ret.map(item => {
+                //获取项目所属用户基本信息
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        const user = await UserModel.findOne({ 'userId': item.userId }, { 'userName': 1 });
+                        const v = JSON.parse(JSON.stringify(item));
+                        v.userName = user.userName;
+                        resolve(v);
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            })).then((r: any[]) => {
+                console.log(r[0])
+                res.send({ code: 0, msg: 'success', data: r });
+            }).catch(e => {
+                console.error(e);
+                next(ErrCode.EXCEUTE_EXCEPTION);
+            });
         } catch (e) {
             console.error(e);
             next(ErrCode.SELECT_MG_EXCEPTION);

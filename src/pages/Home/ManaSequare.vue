@@ -13,8 +13,13 @@
           <v-card-title>{{ item.itemTitle }}</v-card-title>
         </div>
         <v-card-subtitle>
+          作者：{{ item.userName || "未知用户" }}
+        </v-card-subtitle>
+        <v-divider class="mx-4 mb-1"></v-divider>
+        <v-card-subtitle>
           {{ item.itemDescription || "暂无描述" }}
         </v-card-subtitle>
+
         <v-card-actions>
           <v-btn variant="tonal" size="small" @click="choseItem(item.itemId)">
             预览
