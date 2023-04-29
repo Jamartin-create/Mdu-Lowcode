@@ -1,16 +1,23 @@
 <template>
   <v-dialog v-model="vis" persistent width="500px">
     <v-card>
-      <v-card-title>字典入口</v-card-title>
-      <v-card-actions>
+      <v-toolbar dard>
+        <v-btn icon dark @click="close">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-toolbar-title>数据字典类型详情</v-toolbar-title>
         <v-spacer></v-spacer>
-        <dict-entry-save-dialog
-          :sgtId="sgt_id"
-          @on-save="getDataList(sgt_id)"
-        />
-      </v-card-actions>
+      </v-toolbar>
       <v-card-text>
-        <v-table :density="'comfortable'">
+        <v-row>
+          <v-col cols="4">字典类型名称：</v-col>
+          <v-col>{{ typeInfo.sgtName }}</v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4">字典类型编码：</v-col>
+          <v-col>{{ typeInfo.sgtCode }}</v-col>
+        </v-row>
+        <v-table class="mt-2" :density="'comfortable'">
           <thead>
             <tr>
               <th class="text-left">入口名称</th>
@@ -27,10 +34,6 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn variant="text" @click="close"> 关闭 </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -39,7 +42,6 @@
 import { ref, reactive } from "vue";
 import DictApi, { DictEntry } from "../../../api/dict";
 import { SysStore } from "../../../store/modules/sys";
-import DictEntrySaveDialog from "./DictEntrySaveDialog.vue";
 import { useDialogOpenClose } from "../../../hooks/useDialog";
 
 const { vis, open, close } = useDialogOpenClose();
@@ -54,13 +56,24 @@ function openDia(sgtId: string) {
   getDataList(sgtId);
 }
 
+const typeInfo = reactive({
+  sgtName: "",
+  sgtCode: "",
+});
 async function getDataList(sgtId: string) {
   dictEntryList.splice(0, dictEntryList.length);
   const { msg, code, data } = await DictApi.getDictEntry(sgtId);
-  if (code != 0) {
-    SysStore().snackOpen(msg);
+  const {
+    msg: m1,
+    code: c1,
+    data: type,
+  } = await DictApi.getDictType({ sgtId });
+  if (code != 0 || c1 != 0) {
+    SysStore().snackOpen(code != 0 ? msg : m1);
     return;
   }
+  typeInfo.sgtName = type[0].sgtName;
+  typeInfo.sgtCode = type[0].sgtCode;
   Array.prototype.push.apply(dictEntryList, data);
 }
 

@@ -11,14 +11,14 @@
         导入项目
       </v-btn>
     </template>
-    <v-toolbar dard>
-      <v-btn icon dark @click="close">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <v-toolbar-title>项目上传</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
     <v-card>
+      <v-toolbar dard>
+        <v-btn icon dark @click="close">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-toolbar-title>项目上传</v-toolbar-title>
+        <v-spacer></v-spacer>
+      </v-toolbar>
       <v-card-text>
         <v-file-input
           v-model="fileInfo"
