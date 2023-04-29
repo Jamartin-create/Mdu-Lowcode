@@ -26,6 +26,9 @@ export default class ItemApi {
     static saveItem(params: Partial<ItemType>): PromiseRes {
         return Request.post(`${v1}/item/`, params);
     }
+    static editItem(params: Partial<ItemType>): PromiseRes {
+        return Request.put(`${v1}/item/`, params);
+    }
     static lockItem(id: string): PromiseRes {
         return Request.put(`${v1}/item/`, { itemId: id, itemPublic: false });
     }
@@ -34,5 +37,13 @@ export default class ItemApi {
     }
     static delItem(id: string): PromiseRes {
         return Request.delete(`${v1}/item/?itemId=${id}`);
+    }
+    //下载项目json
+    static downloadItemJson(id: string): PromiseRes {
+        return Request.get(`${v1}/item/${id}/json`);
+    }
+    //上传项目json
+    static uploadItemJson(params: any): PromiseRes {
+        return Request.post(`${v1}/item/json`, params);
     }
 }

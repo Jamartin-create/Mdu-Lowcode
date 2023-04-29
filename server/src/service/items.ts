@@ -6,8 +6,9 @@ import { getUserInfo } from '../utils/auth';
 import { Item } from '../db/mongoDB/schema/schemaType';
 import { guid } from '../utils/strHandler';
 import { initSchemaInfo, updateSchemaInfo } from '../utils/dataFilled';
-import { getGROUP_BYID } from "./group";
+import { getGROUP_BYID, saveGroup } from "./group";
 import { UserModel } from "./user";
+import { explainJson, inplainToJson } from "../plugin/lowcode-engine/explain&inplain";
 
 export const ItemModel = useModel('item', ItemSchema);
 
@@ -26,6 +27,17 @@ function fillItemInfo(uid: string, groupId: string): Partial<Item> {
         groupId: groupId,
         ...initSchemaInfo(uid)
     }
+}
+
+export function saveItem(item: any) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const ret = await new ItemModel(item).save();
+            resolve(ret);
+        } catch (e) {
+            reject(e);
+        }
+    });
 }
 
 export default class ItemService {
@@ -130,6 +142,45 @@ export default class ItemService {
         } catch (e) {
             console.error(e.message);
             next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
+
+    //项目导出
+    static exportJson = async (req: Request, res: Response, next: NextFunction) => {
+        const { params: { itemId } } = req;
+        try {
+            const item = await ItemModel.findOne({ itemId });
+            if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
+            const group = await getGROUP_BYID(item.groupId);
+            if (!group) return next(ErrCode.GROUP_NOT_FOUD_EXCEPTION);
+            res.send({ code: 0, msg: 'success', data: inplainToJson(item, [group]) });
+        } catch (e) {
+            console.log(e);
+            next(ErrCode.EXCEUTE_EXCEPTION);
+        }
+    }
+    //项目导入
+    static importJson = async (req: any, res: Response, next: NextFunction) => {
+        const { file: { buffer } } = req;
+        if (!buffer) return next(ErrCode.UPLOAD_FILE_EXCEPTION);
+        const { item, group } = explainJson(JSON.parse(buffer.toString()));
+        if (!item || !group) return next(ErrCode.FILE_OPTION_NOT_ENOUTH);
+        try {
+            const groupId = guid();
+            await saveGroup({
+                groupId: groupId,
+                groupTitle: groupId,
+                groupJson: group,
+                ...initSchemaInfo(getUserInfo(req).userId),
+            })
+            const itemNew: any = await saveItem({
+                itemTitle: item.itemTitle,
+                itemDescription: item.itemDescription,
+                ...fillItemInfo(getUserInfo(req).userId, groupId),
+            })
+            res.send({ code: 0, msg: 'success', data: itemNew.itemId })
+        } catch (e) {
+            return next(ErrCode.INSETER_MG_EXCEPTION);
         }
     }
 }

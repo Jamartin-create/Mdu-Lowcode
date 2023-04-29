@@ -43,6 +43,9 @@ export const ErrCode = {
     DICT_TYPE_NOT_FOUND_EXCEPTION: generatorError({ code: 90013, msg: '未找到字典Type' }),
     COMP_NOT_FOUND_EXCEPTION: generatorError({ code: 90014, msg: '未找到物料' }),
     MQ_DATA_NOT_FOUND: generatorError({ code: 90015, msg: '未找到数据' }),
+    UPLOAD_FILE_EXCEPTION: generatorError({ code: 90016, msg: '上传文件异常' }),
+    FILE_OPTION_NOT_ENOUTH: generatorError({ code: 90017, msg: '文件操作参数不足' }),
+    INSETER_MG_EXCEPTION: generatorError({ code: 90018, msg: 'MongoDB数据库插入异常' }),
 }
 
 //请求异常捕获（链式调用结尾）

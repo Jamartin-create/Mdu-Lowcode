@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import Panel from "./Panel.vue";
 import LeftSideBar from "./LeftSideBar.vue";
@@ -8,6 +8,9 @@ import DiaSaveItem from "./components/DiaSaveItem.vue";
 import { ItemType } from "../../api/item";
 import { ItemStore } from "../../store/modules/item";
 import ItemApi from "../../api/item";
+import { downloadJson } from "../../utils/common";
+import { SysStore } from "../../store/modules/sys";
+import FileUpload from "./components/FileUpload.vue";
 
 const router = useRouter();
 const itemPinia = ItemStore();
@@ -39,6 +42,19 @@ function onSelect(el: any) {
 async function saveItem(params: ItemType) {
   itemPinia.saveCurItem(params);
 }
+//编辑项目
+async function editItem(params: ItemType) {
+  try {
+    const { code, msg } = await ItemApi.editItem(params);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("编辑成功");
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 //返回主页
 function backHome() {
@@ -50,15 +66,55 @@ function backHome() {
 async function publishItem() {
   try {
     if (itemPinia.curItem?.itemPublic) {
-      await ItemApi.lockItem(itemPinia.curItem.itemId as string);
+      const { code, msg } = await ItemApi.lockItem(
+        itemPinia.curItem.itemId as string
+      );
+      if (code != 0) {
+        SysStore().snackOpen(msg);
+        return;
+      }
+      SysStore().snackOpen("已设为私密");
       return;
     }
-    await ItemApi.unLockItem(itemPinia.curItem!.itemId as string);
+    const { code, msg } = await ItemApi.unLockItem(
+      itemPinia.curItem!.itemId as string
+    );
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    SysStore().snackOpen("已设为公开");
   } catch (e) {
     console.error(e);
   } finally {
     await itemPinia.choseOneItem(itemPinia.curItem!.itemId as string);
   }
+}
+
+//导出项目
+async function exportItem() {
+  try {
+    //下载项目
+    const { code, msg, data } = await ItemApi.downloadItemJson(
+      itemPinia.curItem!.itemId as string
+    );
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    downloadJson(data, itemPinia.curItem!.itemTitle as string);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+const isRefresh = ref<boolean>(true);
+async function refreshItem(itemId: string) {
+  await itemPinia.choseOneItem(itemId);
+  isRefresh.value = false;
+  nextTick(() => {
+    isRefresh.value = true;
+  });
 }
 </script>
 
@@ -71,7 +127,17 @@ async function publishItem() {
           @click.stop="siderCtl"
         ></v-app-bar-nav-icon>
       </template>
-
+      <FileUpload @on-save="refreshItem" v-if="!itemPinia.curItem" />
+      <v-btn
+        size="small"
+        variant="elevated"
+        color="blue-darken-2"
+        @click="exportItem"
+        v-if="itemPinia.curItem"
+      >
+        <v-icon start icon="mdi-export-variant"></v-icon>
+        导出项目
+      </v-btn>
       <v-btn
         size="small"
         variant="elevated"
@@ -90,21 +156,21 @@ async function publishItem() {
         ></v-icon>
         {{ itemPinia.curItem?.itemPublic ? "私有" : "公开" }}
       </v-btn>
-      <v-btn
-        icon="mdi-content-save-outline"
-        variant="text"
-        @click="DiaOnSave?.open()"
-      ></v-btn>
+      <DiaSaveItem
+        :item-id="itemPinia.curItem?.itemId as string"
+        :saveType="!itemPinia.curItem ? 'save' : 'edit'"
+        @save="saveItem"
+        @edit="editItem"
+      />
       <v-btn variant="text" icon="mdi-close" @click="backHome"></v-btn>
     </v-app-bar>
     <LeftSideBar ref="LeftSider" />
     <RightSiderBar ref="RightSider" />
     <v-main>
       <div class="wrapper">
-        <Panel ref="panel" @select="onSelect" />
+        <Panel v-if="isRefresh" ref="panel" @select="onSelect" />
       </div>
     </v-main>
-    <DiaSaveItem ref="DiaOnSave" @save="saveItem" />
   </v-app>
 </template>
 

@@ -17,6 +17,16 @@ export async function getGROUP_BYID(id: string) {
         throw e;
     }
 }
+export function saveGroup(group: any) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const ret = await new groupModel(group).save();
+            resolve(ret);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
 
 export default class GroupService {
     //根据项目id获取组件组
