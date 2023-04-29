@@ -34,7 +34,8 @@ export async function getLineChartData(dev_id: string, data_code: string, start_
         xAxis: {
             data: value.map((v: any) => {
                 const timestamp = new Date(v.create_time);
-                return `${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`;
+                // ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}
+                return `${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()}`;
             })
         },
         series: [{
@@ -62,7 +63,8 @@ export async function getMultiLineChartSql(dev_ids: string[], data_code: string,
     const set = new Set();
     value.forEach((v: any) => {
         const timestamp = new Date(v.create_time);
-        set.add(`${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`);
+        //${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}
+        set.add(`${timestamp.getFullYear()}-${timestamp.getMonth() + 1}-${timestamp.getDate()} `);
     });
     const xAxis = [...set];
     const series = data.map((d: any, idx: number) => {

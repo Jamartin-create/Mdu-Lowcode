@@ -7,6 +7,7 @@ import componentRoutes from './component'
 import dataSourceRoutes from './dataSource'
 import DictRoutes from './dict'
 import mysql_api from './mysql_api'
+import example from './exampleAPI';
 
 //v1版本路由
 const v1 = Router();
@@ -21,6 +22,10 @@ v1.use(DictRoutes);
 const MQ = Router();
 MQ.use(mysql_api);
 
+//示例数据
+const EXAMP = Router();
+EXAMP.use(example);
+
 //路由
 const routes = Router();
 
@@ -28,10 +33,11 @@ routes.use(expressjwt({
     secret: 'salt',
     requestProperty: 'auth',
     algorithms: ['HS256']
-}).unless({ path: [/^\/api\/v1\/auth\/.*/, /^\/api\/MQ\/.*/] }))
+}).unless({ path: [/^\/api\/v1\/auth\/.*/, /^\/api\/MQ\/.*/, , /^\/api\/example\/.*/] }))
 
 
 routes.use('/api/v1', v1);
 routes.use('/api/MQ', MQ);
+routes.use('/api/MQ/examp', EXAMP);
 
 export default routes;

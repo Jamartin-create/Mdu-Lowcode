@@ -27,6 +27,7 @@ export function useCharts(chartEL: Ref<ElRef | undefined | null>) {
     //更新ECharts组件
     function updateEchart(option: EchartOption) {
         try {
+            chart?.clear();
             chart?.setOption(option);
         } catch (e) {
             console.error(e);
@@ -49,7 +50,7 @@ export function useChartData() {
                 const { code, msg, data } = await MQAPIApi.getUrlData({
                     url: ds.dsApiPath,
                     options: {
-                        dev_id: ds.devId.join(","),
+                        dev_id: ds.devId?.join(","),
                         data_code: ds.dataCode,
                     },
                 });
