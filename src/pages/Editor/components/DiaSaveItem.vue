@@ -1,5 +1,16 @@
 <template>
   <v-dialog v-model="vis" width="300">
+    <template v-slot:activator="{ props }">
+      <v-btn
+        :icon="
+          saveType === 'save'
+            ? 'mdi-content-save-outline'
+            : 'mdi-content-save-edit-outline'
+        "
+        variant="text"
+        v-bind="props"
+      ></v-btn>
+    </template>
     <v-card>
       <v-container>
         <v-text-field
@@ -23,12 +34,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { ItemType } from "../../../api/item";
+import { useDialogOpenClose } from "../../../hooks/useDialog";
+import ItemApi from "../../../api/item";
+import { SysStore } from "../../../store/modules/sys";
 
-const emtis = defineEmits(["save"]);
+const { vis, close } = useDialogOpenClose();
 
-const vis = ref<boolean>(false);
+const emtis = defineEmits(["save", "edit"]);
+const { saveType, itemId } = defineProps<{
+  saveType: string;
+  itemId?: string;
+}>();
+
+watch(
+  () => itemId,
+  (val) => {
+    if (val) getData();
+  },
+  { immediate: true }
+);
+async function getData() {
+  try {
+    const {
+      code,
+      msg,
+      data: { item },
+    } = await ItemApi.getItemById(itemId!);
+    if (code != 0) {
+      SysStore().snackOpen(msg);
+      return;
+    }
+    form.itemTitle = item.itemTitle;
+    form.itemDescription = item.itemDescription;
+    form.itemId = item.itemId;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 const form = reactive<Partial<ItemType>>({
   itemTitle: "",
   itemDescription: "",
@@ -39,12 +84,9 @@ const rule = {
 };
 
 function saveItem() {
-  vis.value = false;
-  emtis("save", form);
+  close();
+  emtis(saveType == "save" ? "save" : "edit", form);
 }
-defineExpose({
-  open: () => (vis.value = true),
-});
 </script>
 
 <style scoped></style>

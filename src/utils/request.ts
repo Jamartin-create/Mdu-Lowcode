@@ -17,9 +17,9 @@ export class Request {
             })
         })
     }
-    static post = (url: string, params?: any): Promise<ResType> => {
+    static post = (url: string, params?: any, headers?: any): Promise<ResType> => {
         return new Promise((reso, reje) => {
-            axios.post(url, params).then(res => {
+            axios.post(url, params, headers).then(res => {
                 reso(res.data);
             }).catch(err => {
                 reje(err);

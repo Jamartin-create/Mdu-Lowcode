@@ -1,13 +1,6 @@
 <template>
   <v-app class="container">
     <div class="item-wrapper">
-      <ItemCard
-        v-for="item in itemList"
-        :options="item"
-        :key="item.itemId"
-        @to-editor="toEditor"
-        @on-del="getList"
-      />
       <v-card>
         <v-container style="height: 100%">
           <v-row style="height: 100%; margin: 0">
@@ -22,6 +15,13 @@
           </v-row>
         </v-container>
       </v-card>
+      <ItemCard
+        v-for="item in itemList"
+        :options="item"
+        :key="item.itemId"
+        @to-editor="toEditor"
+        @on-del="getList"
+      />
     </div>
   </v-app>
 </template>
