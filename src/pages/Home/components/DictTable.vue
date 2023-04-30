@@ -1,10 +1,10 @@
 <template>
   <v-card :loading="btnLoading">
-    <v-card-text>
+    <v-card-text class="table-wrapper">
       <v-card-actions>
         <DictSaveDialog @on-save="getList" />
       </v-card-actions>
-      <v-table density="comfortable">
+      <v-table density="comfortable" style="min-width: 800px">
         <thead>
           <tr>
             <th class="text-left">字典类型ID</th>
@@ -92,4 +92,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.table-wrapper {
+  overflow-x: auto;
+}
+</style>

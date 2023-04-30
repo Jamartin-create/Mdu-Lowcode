@@ -64,6 +64,11 @@ export const ItemStore = defineStore({
                     this.curItemGroup = data;
                     return;
                 }
+                list.forEach(item => {
+                    Object.keys(item.props).forEach(key => {
+                        if (item.props[key] == '') delete item.props[key];
+                    });
+                })
                 //编辑
                 const { msg, code } = await GroupApi.editGroup({
                     groupId: this.curItemGroup.groupId,

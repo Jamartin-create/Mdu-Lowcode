@@ -11,15 +11,17 @@ import { Props } from "../plugin/lowcode-engine/schemaTrans";
 
 const compModel = useModel('comp', CompSchema);
 
-async function getAllList() {
-    return await compModel.find();
+async function getAllList(isSort?: boolean) {
+    if (!isSort) return await compModel.find({});
+    // 以下代码为了解决物料排序问题
+    return await compModel.find({}).sort({ createTime: -1 });
 }
 
 export default class ComponentService {
     //获取所有物料
     static getList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const comps = await getAllList();
+            const comps = await getAllList(false);
             const ret = Engine.translateSchema(comps);
             res.send({ code: 0, msg: 'success', data: ret });
         } catch (e) {
@@ -30,7 +32,7 @@ export default class ComponentService {
     //获取物料列表
     static getTable = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const comps = await getAllList();
+            const comps = await getAllList(true);
             res.send({ code: 0, msg: 'success', data: comps });
         } catch (e) {
             console.error(e);

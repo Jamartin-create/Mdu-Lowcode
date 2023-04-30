@@ -68,7 +68,7 @@
                 DataSrouce
               </v-tab>
             </v-tabs>
-            <v-window v-model="tab">
+            <v-window v-model="tab" style="height: 300px; overflow: scroll">
               <v-window-item value="props">
                 <OptionsListForm ref="propsList" />
               </v-window-item>

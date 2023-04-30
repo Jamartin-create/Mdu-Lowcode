@@ -1,5 +1,5 @@
 <template>
-  <v-container no-gutters>
+  <v-container no-gutters style="min-width: 600px">
     <v-row
       class="form-list-row"
       v-for="(form, idx) in formList"
@@ -35,6 +35,11 @@
           item-value="sgeValue"
           variant="underlined"
           density="comfortable"
+          style="
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+          "
         ></v-select>
       </v-col>
       <v-col>

@@ -1,18 +1,16 @@
 <template>
   <v-card>
-    <v-card-text>
+    <v-card-text class="table-wrapper">
       <v-card-actions>
         <CompEditDialog @on-save="getDataList" />
       </v-card-actions>
-      <v-table density="comfortable">
+      <v-table density="comfortable" hover style="min-width: 800px">
         <thead>
           <tr>
             <th>物料名称</th>
             <th>物料标题</th>
             <th>物料类型</th>
-            <th>物料配置信息</th>
-            <th>物料样式信息</th>
-            <th>数据源</th>
+            <th>创建时间</th>
             <th class="text-center" width="230px">操作</th>
           </tr>
         </thead>
@@ -21,9 +19,7 @@
             <td>{{ comp.compName }}</td>
             <td>{{ comp.compTitle }}</td>
             <td>{{ comp.compType }}</td>
-            <td>配置项</td>
-            <td>样式表</td>
-            <td>数据源配置</td>
+            <td>{{ formatDate((comp as any).createTime) }}</td>
             <td>
               <CompDetailDialog :compId="comp.compId!" />
               <DeleteConfirm @confirm="delOne(comp.compId as string)" />
@@ -40,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, provide } from "vue";
+import { onMounted, reactive, provide, computed } from "vue";
 import { SysStore } from "../../../store/modules/sys";
 import CompEditDialog from "./CompEditDialog.vue";
 import CompApi, { CompType } from "../../../api/comp";
@@ -48,6 +44,7 @@ import CompDetailDialog from "./CompDetailDialog.vue";
 import CompEditDialogReal from "./CompEditDialogReal.vue";
 import DeleteConfirm from "../../../components/DialogComponents/DeleteConfirm.vue";
 import { useDict } from "../../../hooks/useDict";
+import { dateFormat } from "../../../utils/common";
 
 const compList = reactive<CompType[]>([]);
 
@@ -82,10 +79,20 @@ async function delOne(id: string) {
 const { dictEntryList, getDictEntryByCode } = useDict();
 provide("dictEntryList", dictEntryList);
 
+const formatDate = computed(() => {
+  return function (time: number) {
+    return dateFormat(new Date(time), "yyyy-MM-dd HH:mm:ss");
+  };
+});
+
 onMounted(async () => {
   await getDataList();
   await getDictEntryByCode("COMP_TYPE");
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.table-wrapper {
+  overflow-x: auto;
+}
+</style>

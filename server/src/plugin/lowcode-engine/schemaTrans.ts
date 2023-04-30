@@ -37,7 +37,7 @@ export function transOptions(props: CompProp[]): Props {
     const res: Props = {};
     props.forEach((it, id) => {
         if (it.type == 'text') {
-            res[it.name as string] = '请输入' + it.text;
+            // res[it.name as string] = '请输入' + it.text;
         } else if (it.type == 'select') {
             // res[it.name as string] = 'default';
         }
