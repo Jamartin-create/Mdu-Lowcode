@@ -38,6 +38,151 @@ export default class PieExamp {
             ]
         };
     }
+    //普通饼图
+    static normalPie() {
+        const option = {
+            title: {
+                text: 'Referer of a Website',
+                subtext: 'Fake Data',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        { value: 1048, name: 'Search Engine' },
+                        { value: 735, name: 'Direct' },
+                        { value: 580, name: 'Email' },
+                        { value: 484, name: 'Union Ads' },
+                        { value: 300, name: 'Video Ads' }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        return option;
+    }
+    //自定义饼图
+    static customPie() {
+        const option = {
+            backgroundColor: '#2c343c',
+            title: {
+                text: 'Customized Pie',
+                left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            visualMap: {
+                show: false,
+                min: 80,
+                max: 600,
+                inRange: {
+                    colorLightness: [0, 1]
+                }
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '50%'],
+                    data: [
+                        { value: 335, name: 'Direct' },
+                        { value: 310, name: 'Email' },
+                        { value: 274, name: 'Union Ads' },
+                        { value: 235, name: 'Video Ads' },
+                        { value: 400, name: 'Search Engine' }
+                    ].sort(function (a, b) {
+                        return a.value - b.value;
+                    }),
+                    roseType: 'radius',
+                    label: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    },
+                    labelLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.3)'
+                        },
+                        smooth: 0.2,
+                        length: 10,
+                        length2: 20
+                    },
+                    itemStyle: {
+                        color: '#c23531',
+                        shadowBlur: 200,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    animationType: 'scale',
+                    animationEasing: 'elasticOut',
+                    animationDelay: function (idx: number) {
+                        return Math.random() * 200;
+                    }
+                }
+            ]
+        };
+        return option;
+    }
+    //基础南丁格尔玫瑰图
+    static basicRosePie() {
+        const option = {
+            legend: {
+                top: 'bottom'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            series: [
+                {
+                    name: 'Nightingale Chart',
+                    type: 'pie',
+                    radius: [50, 250],
+                    center: ['50%', '50%'],
+                    roseType: 'area',
+                    itemStyle: {
+                        borderRadius: 8
+                    },
+                    data: [
+                        { value: 40, name: 'rose 1' },
+                        { value: 38, name: 'rose 2' },
+                        { value: 32, name: 'rose 3' },
+                        { value: 30, name: 'rose 4' },
+                        { value: 28, name: 'rose 5' },
+                        { value: 26, name: 'rose 6' },
+                        { value: 22, name: 'rose 7' },
+                        { value: 18, name: 'rose 8' }
+                    ]
+                }
+            ]
+        };
+        return option;
+    }
+
 }
 
 
