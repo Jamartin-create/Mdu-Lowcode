@@ -11,8 +11,8 @@ import { Props } from "../plugin/lowcode-engine/schemaTrans";
 
 const compModel = useModel('comp', CompSchema);
 
-async function getAllList(isSort?: boolean) {
-    if (!isSort) return await compModel.find({});
+async function getAllList(isSort?: boolean, options: any = {}) {
+    if (!isSort) return await compModel.find(options);
     // 以下代码为了解决物料排序问题
     return await compModel.find({}).sort({ createTime: -1 });
 }

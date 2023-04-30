@@ -6,21 +6,11 @@
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item value="c">
-        <draggable
-          :list="componentList"
-          class="draggable"
-          item-key="id"
-          :component-data="{ tag: 'v-list' }"
-          :group="{ name: 'component', pull: 'clone', put: false }"
-          :sort="false"
-          :clone="onClone"
-        >
-          <template #item="{ element }">
-            <div class="cmp-wrp">
-              {{ element.tagCN }}
-            </div>
-          </template>
-        </draggable>
+        <sider-draggable :component-list="baseCompList" />
+        <v-divider />
+        <sider-draggable :component-list="formCompList" />
+        <v-divider />
+        <sider-draggable :component-list="visualCompList" />
       </v-window-item>
       <v-window-item value="m"> 图层 </v-window-item>
     </v-window>
@@ -29,10 +19,14 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { guid } from "../../utils/common";
-import draggable from "vuedraggable";
 import CompApi from "../../api/comp";
 import { SysStore } from "../../store/modules/sys";
+import SiderDraggable from "./components/SiderDraggable.vue";
+
+//拖拽组件控制
+const baseCompList = ref<any[]>([]);
+const formCompList = ref<any[]>([]);
+const visualCompList = ref<any[]>([]);
 
 async function getCompList() {
   try {
@@ -41,8 +35,17 @@ async function getCompList() {
       SysStore().snackOpen(msg);
       return;
     }
-    componentList.splice(0, componentList.length);
-    Array.prototype.push.apply(componentList, data);
+    const bases: any[] = [];
+    const forms: any[] = [];
+    const visuals: any[] = [];
+    (data as any[]).forEach((item) => {
+      if (item.type == "base") bases.push(item);
+      if (item.type == "form") forms.push(item);
+      if (item.type == "visual") visuals.push(item);
+    });
+    baseCompList.value = bases;
+    formCompList.value = forms;
+    visualCompList.value = visuals;
   } catch (e) {
     console.error(e);
   }
@@ -50,43 +53,6 @@ async function getCompList() {
 
 //tab控制
 const tab = ref<"c" | "m">("c");
-
-/*
-测试数据
-{
-    id: 1,
-    tag: "v-btn",
-    tagCN: "按钮",
-    props: {
-      text: "按钮",
-    },
-  },
-  {
-    id: 2,
-    tag: "v-card",
-    tagCN: "卡片",
-    props: {
-      title: "标题",
-      subtitle: "测试子标题",
-      text: "测试内容",
-    },
-  },
-  {
-    id: 3,
-    tag: "EchartsTest",
-    tagCN: "测试Echarts",
-    props: {},
-  },
-*/
-
-//拖拽组件控制
-const componentList = reactive<any[]>([]);
-
-function onClone(data: any) {
-  let nD = JSON.parse(JSON.stringify(data));
-  nD.id = guid();
-  return nD;
-}
 
 //组件开合控制
 const drawer = ref<boolean>(true);
@@ -97,23 +63,3 @@ defineExpose({
 
 getCompList();
 </script>
-
-<style scoped lang="scss">
-.cmp-type {
-  margin-top: 10px;
-  text-align: center;
-}
-.cmp-wrp {
-  padding: 10px;
-  text-align: center;
-  cursor: move;
-}
-.cmp-type:hover,
-.cmp-wrp:hover {
-  background-color: #ebebeb;
-}
-.draggable {
-  display: flex;
-  flex-direction: column;
-}
-</style>
