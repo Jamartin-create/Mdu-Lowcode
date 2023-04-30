@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="vis"
-    :scrim="false"
-    width="1200px"
-    transition="dialog-bottom-transition"
-  >
+  <v-dialog v-model="vis" width="1200px" transition="dialog-bottom-transition">
     <v-card>
       <v-toolbar dark>
         <v-btn icon dark @click="close">
@@ -13,7 +8,7 @@
         <v-toolbar-title>选择数据源</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-card height="500px">
+      <v-card height="500px" style="overflow: scroll">
         <v-card-text>
           <v-table density="comfortable">
             <thead>

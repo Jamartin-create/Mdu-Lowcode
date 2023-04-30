@@ -1,5 +1,8 @@
 <template>
-  <div ref="Full" :style="{ width: '100%', height: '400px' }"></div>
+  <div
+    ref="Full"
+    :style="{ width: props.width || '100%', height: props.height || '500px' }"
+  ></div>
 </template>
 
 <script setup lang="ts">
@@ -8,7 +11,6 @@ import { useCharts, useChartData } from "../../../hooks/useCharts";
 import type { EChartsOption } from "echarts";
 import { onMounted } from "vue";
 import { watch } from "vue";
-import { SysStore } from "../../../store/modules/sys";
 
 const Full = ref();
 
@@ -18,15 +20,19 @@ const props = defineProps<{
   dts: any;
   styles: any;
   title?: string;
+  width?: string;
+  height?: string;
 }>();
 
 const { options, getData } = useChartData();
 watch(
   () => props,
   async (n) => {
+    console.log(n);
     if (n.dts.type == "sync") {
       await getData(props.dts.datasourceid);
     }
+    console.log(n);
     if (n.dts.type != "sync") {
       options.value = {};
     }

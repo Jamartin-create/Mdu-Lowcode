@@ -3,6 +3,8 @@ import Pie from './pie';
 import Line from './line';
 import { Request } from 'express-jwt';
 import { ErrCode } from '../../common/exception';
+import Scatter from './scatter';
+import Bar from './bar';
 const routes = Router();
 function functionRes(req: Request, res: Response, next: NextFunction, callBack: Function) {
     try {
@@ -29,17 +31,17 @@ lineRouter.get('/gradientStackedAreaChart', (req, res, next) => functionRes(req,
 lineRouter.get('rainfallVsEvaporation', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
 
 const scatterRouter = Router();
-scatterRouter.get('/baseScatter', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-scatterRouter.get('/rippleScatter', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-scatterRouter.get('/getScatter1Option', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-scatterRouter.get('/shanghaiIndexKLine', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-scatterRouter.get('/touchKLine', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
+scatterRouter.get('/baseScatter', (req, res, next) => functionRes(req, res, next, Scatter.baseScatter));
+scatterRouter.get('/rippleScatter', (req, res, next) => functionRes(req, res, next, Scatter.rippleScatter));
+scatterRouter.get('/getScatter1Option', (req, res, next) => functionRes(req, res, next, Scatter.getScatter1Option));
+scatterRouter.get('/shanghaiIndexKLine', (req, res, next) => functionRes(req, res, next, Scatter.shanghaiIndexKLine));
+scatterRouter.get('/touchKLine', (req, res, next) => functionRes(req, res, next, Scatter.touchKLine));
 
 const barRouter = Router();
-barRouter.get('/rainfallVsEvaporation', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-barRouter.get('/multiYAxis', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-barRouter.get('/mixLineBar', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
-barRouter.get('/globalEconomy', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
+barRouter.get('/rainfallVsEvaporation', (req, res, next) => functionRes(req, res, next, Bar.rainfallVsEvaporation));
+barRouter.get('/multiYAxis', (req, res, next) => functionRes(req, res, next, Bar.multiYAxis));
+barRouter.get('/mixLineBar', (req, res, next) => functionRes(req, res, next, Bar.mixLineBar));
+barRouter.get('/globalEconomy', (req, res, next) => functionRes(req, res, next, Bar.globalEconomy));
 
 routes.use('/pie', pieRouter);
 routes.use('/line', lineRouter);

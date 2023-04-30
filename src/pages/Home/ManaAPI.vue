@@ -2,11 +2,11 @@
   <v-app class="container">
     <v-card elevation="0">
       <v-card-title>数据源管理</v-card-title>
-      <v-card-text>
+      <v-card-text class="table-wrapper">
         <v-card-actions>
           <DataSourceSaveDialog @on-save="getDsList" />
         </v-card-actions>
-        <v-table density="comfortable">
+        <v-table density="comfortable" style="min-width: 1000px">
           <thead>
             <tr>
               <th>数据源ID</th>
@@ -100,4 +100,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.table-wrapper {
+  overflow-x: auto;
+}
+</style>
