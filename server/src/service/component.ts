@@ -115,6 +115,9 @@ export default class ComponentService {
         if (!compId || !compName || !compTitle || !compType || !compProps || !compStyles || (compType == "visualize" && !compDts)) return next(ErrCode.PARAM_EXCEPTION);
         const session = await mongoose.connection.startSession();
         try {
+            const comp = await compModel.findOne({ compId });
+            if (comp.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
+            if (!comp) return next(ErrCode.COMP_NOT_FOUND_EXCEPTION);
             session.startTransaction();
             const editParams: any = {};
             if (compName) editParams.compName = compName;
@@ -146,6 +149,7 @@ export default class ComponentService {
         try {
             session.startTransaction();
             const comp = await compModel.findOne({ compId }).session(session);
+            if (comp.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
             if (!comp) return next(ErrCode.COMP_NOT_FOUND_EXCEPTION);
             await comp.delete();
             await session.commitTransaction();

@@ -50,6 +50,7 @@ export default class DictService {
         try {
             session.startTransaction();
             const sgt = await SgtModel.findOne({ sgtId }).session(session);
+            if (sgt.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
             if (!sgt) return next(ErrCode.DICT_TYPE_NOT_FOUND_EXCEPTION);
             const sges = await SgeModel.find({ sgtId });
             if (sges.length != 0) await SgeModel.deleteMany({ sgtId }, { session });
@@ -71,6 +72,7 @@ export default class DictService {
             if (!sgtId) return next(ErrCode.PARAM_EXCEPTION);
             if (!sgtCode && !sgtName) return res.send({ code: 0, msg: 'success' });
             const sgt = await SgtModel.findOne({ sgtId });
+            if (sgt.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
             if (!sgt) return next(ErrCode.DICT_TYPE_NOT_FOUND_EXCEPTION);
             const newOptions: {
                 sgtCode?: string,

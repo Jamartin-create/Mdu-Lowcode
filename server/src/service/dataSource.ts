@@ -50,7 +50,8 @@ export default class DataSourceService {
     static editDS = async (req: Request, res: Response, next: NextFunction) => {
         const { body: { dsStaticDatas, dsApiPath, dsPath, dsId, devId, dataCode } } = req;
         if (!dsStaticDatas && !dsApiPath && !dsPath) return next(ErrCode.PARAM_EXCEPTION);
-        const [dataSource] = await dsModel.find({ dsId });
+        const dataSource = await dsModel.findOne({ dsId });
+        if (dataSource.createUser !== getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
         if (!dataSource) return next(ErrCode.DATASOURCE_NOT_FOUND_EXCEPTION);
         try {
             await dsModel.updateOne({ dsId }, {
@@ -76,6 +77,7 @@ export default class DataSourceService {
         if (!dsId) return next(ErrCode.PARAM_EXCEPTION);
         try {
             const ds = await dsModel.findOne({ dsId });
+            if (ds.createUser !== getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
             if (!ds) return next(ErrCode.DATASOURCE_NOT_FOUND_EXCEPTION);
             await dsModel.deleteOne({ dsId });
             res.send({ code: 0, msg: 'success' });

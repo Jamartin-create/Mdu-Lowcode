@@ -46,6 +46,7 @@ export const ErrCode = {
     UPLOAD_FILE_EXCEPTION: generatorError({ code: 90016, msg: '上传文件异常' }),
     FILE_OPTION_NOT_ENOUTH: generatorError({ code: 90017, msg: '文件操作参数不足' }),
     INSETER_MG_EXCEPTION: generatorError({ code: 90018, msg: 'MongoDB数据库插入异常' }),
+    NO_PERMISSION_EXCEPTION: generatorError({ code: 90019, msg: '无权限' }),
 }
 
 //请求异常捕获（链式调用结尾）

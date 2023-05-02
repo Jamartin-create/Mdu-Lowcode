@@ -113,7 +113,8 @@ export default class ItemService {
     static editItem = async (req: Request, res: Response, next: NextFunction) => {
         const { body: { itemTitle, itemDescription, itemId, itemPublic, itemPublicPage } } = req;
         if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
-        const [item] = await ItemModel.find({ itemId });
+        const item = await ItemModel.findOne({ itemId });
+        if (item.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
         if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
         try {
             await ItemModel.updateOne({ itemId }, {
@@ -135,6 +136,7 @@ export default class ItemService {
         const { query: { itemId } } = req;
         if (!itemId) return next(ErrCode.PARAM_EXCEPTION);
         const item = await ItemModel.findOne({ itemId });
+        if (item.createUser != getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
         if (!item) return next(ErrCode.ITEM_NOT_FOUND_EXCEPTION);
         try {
             await ItemModel.deleteOne({ itemId });
