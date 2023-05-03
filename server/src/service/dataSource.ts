@@ -24,7 +24,7 @@ export default class DataSourceService {
     }
     //获取
     static getList = async (req: Request, res: Response, next: NextFunction) => {
-        const ds = await dsModel.find();
+        const ds = await dsModel.find({}, {}, { sort: { createTime: -1 } });
         res.send({ code: 0, msg: 'success', data: ds });
     }
 
@@ -48,7 +48,7 @@ export default class DataSourceService {
      * @returns 
      */
     static editDS = async (req: Request, res: Response, next: NextFunction) => {
-        const { body: { dsStaticDatas, dsApiPath, dsPath, dsId, devId, dataCode } } = req;
+        const { body: { dsTitle, dsStaticDatas, dsApiPath, dsPath, dsId, devId, dataCode } } = req;
         if (!dsStaticDatas && !dsApiPath && !dsPath) return next(ErrCode.PARAM_EXCEPTION);
         const dataSource = await dsModel.findOne({ dsId });
         if (dataSource.createUser !== getUserInfo(req).userId) return next(ErrCode.NO_PERMISSION_EXCEPTION);
@@ -60,6 +60,7 @@ export default class DataSourceService {
                 dsPath: dsPath || dataSource.dsPath,
                 devId: devId || dataSource.devId,
                 dataCode: dataCode || dataSource.dataCode,
+                dsTitle: dsTitle || dataSource.dsTitle,
                 ...updateSchemaInfo(getUserInfo(req).userId)
             });
             res.send({ code: 0, msg: 'success' });

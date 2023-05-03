@@ -30,7 +30,7 @@
               <v-col cols="3">监测数据字段：</v-col>
               <v-col>{{ dsInfo.dataCode }}</v-col>
             </v-row>
-            <v-row v-if="dsInfo.dsStaticDatas">
+            <!-- <v-row v-if="dsInfo.dsStaticDatas">
               <v-col cols="3">静态数据：</v-col>
               <v-col>
                 <v-json-edit
@@ -44,7 +44,7 @@
                   v-model="dsInfo.dsStaticDatas"
                 />
               </v-col>
-            </v-row>
+            </v-row> -->
           </v-card-text>
         </v-card>
       </v-card-text>

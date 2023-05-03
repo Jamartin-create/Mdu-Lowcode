@@ -47,7 +47,7 @@
           variant="underlined"
           density="comfortable"
         ></v-select>
-        <div>
+        <!-- <div>
           <span class="json-title">静态数据</span>
           <v-json-edit
             class="json-edit"
@@ -58,7 +58,7 @@
             mode="text"
             v-model="jsonData"
           />
-        </div>
+        </div> -->
       </v-container>
     </v-card>
   </v-dialog>
@@ -112,7 +112,7 @@ async function getDsInfo() {
 async function save() {
   loading();
   try {
-    formParams.dsStaticDatas = JSON.parse(jsonData.value);
+    // formParams.dsStaticDatas = JSON.parse(jsonData.value);
     const { code, msg } = await DataSourceApi.updateOne({
       ...formParams,
       dsId: props.dsId,

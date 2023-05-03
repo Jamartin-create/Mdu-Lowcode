@@ -554,7 +554,7 @@ export default class LineExamp {
         });
         const option = {
             title: {
-                text: 'Rainfall vs Evaporation',
+                text: '武汉市6月——10月降雨量与蒸发量',
                 left: 'center'
             },
             tooltip: {
@@ -564,7 +564,7 @@ export default class LineExamp {
                 }
             },
             legend: {
-                data: ['Evaporation', 'Rainfall'],
+                data: ['蒸发量', '降雨量'],
                 left: 10
             },
             toolbox: {
@@ -630,20 +630,20 @@ export default class LineExamp {
             ],
             yAxis: [
                 {
-                    name: 'Evaporation(m³/s)',
+                    name: '蒸发量(m³/s)',
                     type: 'value',
                     max: 500
                 },
                 {
                     gridIndex: 1,
-                    name: 'Rainfall(mm)',
+                    name: '降水量(mm)',
                     type: 'value',
                     inverse: true
                 }
             ],
             series: [
                 {
-                    name: 'Evaporation',
+                    name: '蒸发量',
                     type: 'line',
                     symbolSize: 8,
                     // prettier-ignore
@@ -652,7 +652,7 @@ export default class LineExamp {
                     ]
                 },
                 {
-                    name: 'Rainfall',
+                    name: '降水量',
                     type: 'line',
                     xAxisIndex: 1,
                     yAxisIndex: 1,

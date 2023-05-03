@@ -7,7 +7,6 @@ import { initSchemaInfo, updateSchemaInfo } from "../utils/dataFilled";
 import { getUserInfo } from '../utils/auth';
 import mongoose from 'mongoose';
 import Engine from '../plugin/lowcode-engine/index';
-import { Props } from "../plugin/lowcode-engine/schemaTrans";
 
 const compModel = useModel('comp', CompSchema);
 

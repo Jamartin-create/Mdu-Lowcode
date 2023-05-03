@@ -28,7 +28,7 @@ lineRouter.get('/lastFiveDaysRain', (req, res, next) => functionRes(req, res, ne
 lineRouter.get('/stackLine', (req, res, next) => functionRes(req, res, next, Line.stackLine));
 lineRouter.get('/stackAreaChart', (req, res, next) => functionRes(req, res, next, Line.stackAreaChart));
 lineRouter.get('/gradientStackedAreaChart', (req, res, next) => functionRes(req, res, next, Line.gradientStackedAreaChart));
-lineRouter.get('rainfallVsEvaporation', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
+lineRouter.get('/rainfallVsEvaporation', (req, res, next) => functionRes(req, res, next, Line.rainfallVsEvaporation));
 
 const scatterRouter = Router();
 scatterRouter.get('/baseScatter', (req, res, next) => functionRes(req, res, next, Scatter.baseScatter));

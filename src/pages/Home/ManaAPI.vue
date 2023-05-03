@@ -9,7 +9,7 @@
         <v-table density="comfortable" style="min-width: 1000px">
           <thead>
             <tr>
-              <th>数据源ID</th>
+              <th>序号</th>
               <th>数据源标题</th>
               <th>数据源静态数据</th>
               <th>数据源动态API地址</th>
@@ -17,8 +17,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ds in dsList" :key="ds.dsId">
-              <td>{{ ds.dsId }}</td>
+            <tr v-for="(ds, idx) in dsList" :key="ds.dsId">
+              <td>{{ idx + 1 }}</td>
               <td>{{ ds.dsTitle }}</td>
               <td>静态数据</td>
               <td>{{ ds.dsApiPath }}</td>

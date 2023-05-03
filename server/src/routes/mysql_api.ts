@@ -18,7 +18,10 @@ routes.route('/data')
 
 routes.route('/value')
     .post(MysqlApiService.saveValue)
-    .delete(MysqlApiService.deleteValue)
+    .delete(MysqlApiService.deleteValue);
+
+routes.route('/values')
+    .post(MysqlApiService.saveValues);
 
 routes.get('/statistics', MysqlApiService.getStatistics)
 

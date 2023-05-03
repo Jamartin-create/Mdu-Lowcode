@@ -43,10 +43,7 @@ function getOption() {
       text: props.title || "普通折线图",
     },
     tooltip: {
-      trigger: "item",
-      formatter: function (params: any) {
-        return "value:" + params.value;
-      },
+      trigger: "axis",
     },
     xAxis: {
       type: "category",

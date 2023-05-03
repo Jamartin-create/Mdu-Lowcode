@@ -352,6 +352,25 @@ export default class MysqlApiService {
         }
     }
 
+    //批量新增值
+    static async saveValues(req: Request, res: Response, next: NextFunction) {
+        const { values } = req.body;
+        if (!values || !values.length) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            //为values添加id
+            await valueModel.bulkCreate(values.map((item: any) => {
+                return {
+                    ...item,
+                    id: guid()
+                }
+            }));
+            return res.send({ code: 0, msg: 'success' });
+        } catch (e) {
+            console.log(e);
+            return next(ErrCode.SELECT_MQ_EXCEPTION);
+        }
+    }
+
     //删除值
     static async deleteValue(req: Request, res: Response, next: NextFunction) {
         const { id } = req.body;
