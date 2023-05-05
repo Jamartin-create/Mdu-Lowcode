@@ -5,6 +5,8 @@ export type ItemGroup = {
     groups: any[]
 }
 
+
+//物料解析
 export function explainJson(itemGroup: ItemGroup) {
     const { itemTitle, itemDescription, groups } = itemGroup;
     return {

@@ -21,6 +21,10 @@ export default class DataSourceApi {
     static getList(): PromiseRes {
         return Request.get(`${v1}/dataSource`);
     }
+    //分页获取数据源列表
+    static getListByPage(params: { page: number, pageSize: number }): PromiseRes {
+        return Request.get(`${v1}/dataSource/list/page`, params);
+    }
     //新增数据源
     static saveOne(params: Partial<DataSourceType>): PromiseRes {
         return Request.post(`${v1}/dataSource`, params);

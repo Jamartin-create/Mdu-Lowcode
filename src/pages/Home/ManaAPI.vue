@@ -1,6 +1,6 @@
 <template>
   <v-app class="container">
-    <v-card elevation="0">
+    <v-card elevation="0" :loading="btnLoading">
       <v-card-title>数据源管理</v-card-title>
       <v-card-text class="table-wrapper">
         <v-card-actions>
@@ -30,6 +30,11 @@
             </tr>
           </tbody>
         </v-table>
+        <v-pagination
+          :length="Math.ceil(total / 10)"
+          v-model:model-value="pagination.page"
+          @update:model-value="onPageChange"
+        ></v-pagination>
       </v-card-text>
     </v-card>
   </v-app>
@@ -45,18 +50,43 @@ import DatasourceDetailDialog from "./components/DatasourceDetailDialog.vue";
 import DatasourceEditDialog from "./components/DatasourceEditDialog.vue";
 import DeleteConfirm from "../../components/DialogComponents/DeleteConfirm.vue";
 import MQAPIApi from "../../api/mysql_api";
+import { useDialogOpenClose } from "../../hooks/useDialog";
+
 const dsList = reactive<DataSourceType[]>([]);
 
+const { btnLoading, loading, unLoading } = useDialogOpenClose();
+
+const pagination = ref<{
+  page: number;
+  pageSize: number;
+}>({
+  page: 1,
+  pageSize: 10,
+});
+const total = ref<number>(0);
+
+function onPageChange(e: any) {
+  console.log(e);
+  pagination.value.page = e;
+  getDsList();
+}
+
 async function getDsList() {
+  loading();
   try {
-    const { code, msg, data } = await DataSourceApi.getList();
+    const { code, msg, data } = await DataSourceApi.getListByPage(
+      pagination.value
+    );
     if (code != 0) {
       SysStore().snackOpen(msg);
       return;
     }
-    replaceArray(dsList, data);
+    replaceArray(dsList, data.ds);
+    total.value = data.total;
   } catch (e) {
     console.error(e);
+  } finally {
+    unLoading();
   }
 }
 

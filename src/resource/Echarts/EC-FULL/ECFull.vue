@@ -1,7 +1,7 @@
 <template>
   <div
     ref="Full"
-    :style="{ width: props.width || '100%', height: props.height || '500px' }"
+    :style="{ width: '100%', height: props.height || '500px' }"
   ></div>
 </template>
 
@@ -19,8 +19,6 @@ const { updateEchart } = useCharts(Full);
 const props = defineProps<{
   dts: any;
   styles: any;
-  title?: string;
-  width?: string;
   height?: string;
 }>();
 
@@ -28,11 +26,9 @@ const { options, getData } = useChartData();
 watch(
   () => props,
   async (n) => {
-    console.log(n);
     if (n.dts.type == "sync") {
       await getData(props.dts.datasourceid);
     }
-    console.log(n);
     if (n.dts.type != "sync") {
       options.value = {};
     }

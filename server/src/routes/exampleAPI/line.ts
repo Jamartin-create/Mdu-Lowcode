@@ -4,7 +4,7 @@ export default class LineExamp {
     static oneWeekRainRate() {
         return {
             title: {
-                text: '未来一周气温变化'
+                text: '武汉市过去一周气温变化'
             },
             tooltip: {
                 trigger: 'axis'

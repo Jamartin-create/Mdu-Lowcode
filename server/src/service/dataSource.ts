@@ -27,6 +27,21 @@ export default class DataSourceService {
         const ds = await dsModel.find({}, {}, { sort: { createTime: -1 } });
         res.send({ code: 0, msg: 'success', data: ds });
     }
+    //分页查询
+    static getDataByPage = async (req: Request, res: Response, next: NextFunction) => {
+        const { query } = req;
+        const page: number = +query.page!;
+        const pageSize: number = +query.pageSize!;
+        if (!page || !pageSize) return next(ErrCode.PARAM_EXCEPTION);
+        try {
+            const ds = await dsModel.find({}, {}, { sort: { createTime: -1 }, skip: (page - 1) * pageSize, limit: pageSize });
+            const total = await dsModel.countDocuments();
+            res.send({ code: 0, msg: 'success', data: { ds, total } });
+        } catch (e) {
+            console.log(e);
+            next(ErrCode.SELECT_MG_EXCEPTION);
+        }
+    }
 
     //新增
     static saveDS = async (req: Request, res: Response, next: NextFunction) => {

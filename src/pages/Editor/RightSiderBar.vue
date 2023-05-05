@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import CompApi from "../../api/comp";
 import { replaceArray } from "../../utils/common";
 import InputField from "./components/InputField.vue";
@@ -43,11 +43,14 @@ type Element = {
 //获取基本信息
 const info = reactive<Partial<Element>>({});
 function catchCom({ compId, props, styles, dts }: Partial<Element>) {
-  info.compId = compId;
-  info.props = props;
-  info.styles = styles;
-  info.dts = dts;
-  getProps(compId!);
+  tab.value = "a";
+  nextTick(() => {
+    info.props = props;
+    info.dts = dts;
+    info.styles = styles;
+    info.compId = compId;
+    getProps(compId!);
+  });
 }
 
 //获取物料的props 和 styles 和 dataSourceGroup（数据源）
